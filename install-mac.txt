@@ -1,0 +1,86 @@
+* app store - update
+
+* safari extensions
+  lastpass
+  ublock origin
+
+* ssh-keygen (or copy)
+
+* install xcode:
+  xcode-select --install
+
+* install homebrew:
+  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+* viscosity
+  https://www.sparklabs.com/viscosity/
+  copy and import bin/vpn-ca.crt bin/vpn-client.ovpn
+
+* brew packages:
+  bash (bash4)
+  bash-completion@2
+  cmark-gfm
+  jq --HEAD
+  postgres
+  python (py3)
+  redis
+  ripgrep
+  the_silver_searcher
+  tree
+  universal-ctags --HEAD
+
+* bin/dotfiles
+  $ cd bin
+  $ git clone --depth 1 https://github.com/junegunn/fzf.git .fzf
+  $ git clone git@github.com:brandon133/dotfiles.git
+  $ cd dotfiles && ./update
+
+  ln -s /Applications/MacVim.app/Contents/bin/mvim ~/bin/gvim
+  ln -s /Applications/MacVim.app/Contents/bin/mvim ~/bin/vim
+
+* vim
+  install macvim: (via MacVim.dmg) - don't use brew since it'll install py2
+    http://macvim-dev.github.io/macvim/
+  $ mkdir ~/.tmp ~/.tmp/undo ~/.tmp/swap ~/.tmp/backup
+  $ cd ~/bin \
+    && ln -s /Applications/MacVim.app/Contents/bin/mvim vim \
+    && ln -s /Applications/MacVim.app/Contents/bin/mvim gvim
+  $ git clone https://brandon133@github.com/brandon133/vim.git .vim \
+    && cd .vim
+    && ./update
+
+  My standard font is SF Mono, but plex is a beautiful font (esp on browser)
+  - SF Mono Font is included in xcode
+  - Install IBM Plex Mono font at https://github.com/IBM/plex
+
+* java.oracle.com
+
+* eclipse
+  install latest (for Mac, install dmg version to ~/bin)
+  $ cd ~/.vim \
+    && git clone git://github.com/ervandew/eclim.git \
+    && vim user.properties < "eclipse.home=${user.home}/bin/Eclipse.app/Contents/Eclipse\n vim.files=${user.home}/.vim" \
+    && ant
+
+
+* other apps
+
+  ●●● ~$ brew list
+  ant                     harfbuzz                pyenv
+  autoconf                icu4c                   python
+  autojump                jq                      readline
+  automake                lame                    redis
+  awscli                  libffi                  ripgrep
+  bash                    libpng                  sqlite
+  bash-completion@2       libtool                 the_silver_searcher
+  cairo                   maven                   tidy-html5
+  cmark-gfm               nmap                    tig
+  fd                      node@8                  tree
+  ffmpeg                  oniguruma               universal-ctags
+  fontconfig              openssl                 wakeonlan
+  freetype                pango                   x264
+  fribidi                 pcre                    xvid
+  gdbm                    pcre2                   xz
+  gettext                 pixman                  youtube-dl
+  glib                    pkg-config
+  graphite2               postgresql

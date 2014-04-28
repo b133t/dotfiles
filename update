@@ -1,0 +1,97 @@
+#!/bin/sh
+DOTFILES=`cd $(dirname $0); pwd`
+
+## options
+while [[ ".$1" != "." ]]; do
+	case "$1" in
+		--vim) opt_vim=1;;
+		--show) opt_show=1;;
+		-*) echo "usage: $0 [--vim] [--show]"; exit 0;;
+		*) break;;
+	esac
+	shift
+done
+
+## diffs <path of real file from $HOME> <reference file in git>
+diffit() {
+	src=$DOTFILES/$1
+	dst=$HOME/$2
+	[[ -f $dst ]] || cp $src $dst
+	if [[ -n $opt_vim ]]; then
+		diff -q $dst $src || vim -d $dst $src
+	elif [[ -n $opt_show ]]; then
+		diff -q $dst $src >/dev/null || {
+			echo "*** diff $dst $src"
+			diff $dst $src
+		}
+	else
+		diff -q $dst $src
+	fi
+}
+
+## config
+diffit ignore .ignore
+diffit gitconfig .gitconfig
+diffit gitignore .gitignore
+diffit tmux.conf .tmux.conf
+diffit vimrc .vimrc
+diffit psqlrc .psqlrc
+diffit gemrc .gemrc
+## ctags.d
+mkdir -p $HOME/.ctags.d
+for f in `ls $DOTFILES/ctags.d`; do
+	diffit ctags.d/$f .ctags.d/$f
+done
+## bash
+diffit bash_profile .bash_profile
+diffit bashrc .bashrc
+diffit inputrc .inputrc
+diffit fzf.bash .fzf.bash
+mkdir -p $HOME/.bash
+for f in `ls $DOTFILES/bash`; do
+	diffit bash/$f .bash/$f
+done
+## karabiner
+if [[ $(uname -s) == "Darwin" ]]; then
+	mkdir -p "$HOME/.config/$d"
+	d=karabiner/assets/complex_modifications
+	for f in `ls $DOTFILES/config/$d`; do
+		diffit config/$d/$f .config/$d/$f
+	done
+fi
+## .lein
+mkdir -p $HOME/.lein
+lein=$DOTFILES/bin/lein
+curl -s https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein -o $lein
+chmod +x $lein
+diffit profiles.clj .lein/profiles.clj
+## bin
+mkdir -p $HOME/bin
+for f in `ls $DOTFILES/bin`; do
+	[[ -d "$DOTFILES/bin/$f" ]] && continue
+	diffit bin/$f bin/$f
+done
+if [[ -d "$DOTFILES/bin/$(uname -s)" ]]; then
+	for f in `ls $DOTFILES/bin/$(uname -s)`; do
+		diffit bin/$(uname -s)/$f bin/$f
+	done
+fi
+# fzf
+{
+	pushd ~/bin/.fzf >/dev/null
+	git fetch >/dev/null 2>&1
+	$(git diff origin --quiet) || {
+		echo "Updating ~/bin/.fzf"
+		git pull
+		./install --bin
+	}
+	popd >/dev/null
+}
+## mutt
+if [[ $opt_mutt ]]; then
+	diffit muttrc .muttrc
+	mkdir -p $HOME/.mutt
+	for f in `ls $DOTFILES/mutt`; do
+		diffit mutt/$f .mutt/$f
+	done
+fi

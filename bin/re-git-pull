@@ -1,0 +1,22 @@
+#!/bin/bash
+# recursive git pull
+set -e
+shopt -s dotglob
+pr() {
+	echo "$(tput bold)>>> ----- $@ $(tput sgr0)"
+}
+update() {
+	for d in "$@"; do
+		[ -d "$d" -a \! -L "$d" ] || continue
+		cd -- "$d"
+		if [ -d ".git" ]; then
+			pr $PWD
+			git pull || true
+		else
+			update *
+		fi
+		cd ..
+	done
+}
+[ $# -gt 0 ] || { echo "usage: $0 DIR [DIR ..]"; exit 1; }
+update $@

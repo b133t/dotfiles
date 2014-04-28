@@ -1,0 +1,35 @@
+#!/bin/bash
+P=`cd "$(dirname $0)"; pwd -P`
+# https://github.com/sindresorhus/github-markdown-css
+css=$P/github-markdown.css
+
+out=/dev/stdout
+while [ ".$1" != "." ]; do
+	case "$1" in
+		-o ) shift; out=$1; shift;;
+		* ) break;;
+	esac
+done
+
+cat <<EOF >$out
+<html><head><title></title>
+<link rel="stylesheet" href="$css">
+<style>
+	.markdown-body {
+		box-sizing: border-box;
+		min-width: 200px;
+		max-width: 980px;
+		margin: 0 auto;
+		padding: 45px;
+	}
+
+	@media (max-width: 767px) {
+		.markdown-body {
+			padding: 15px;
+		}
+	}
+</style>
+<body class="markdown-body">
+$(cmark-gfm $*)
+</body></html>
+EOF

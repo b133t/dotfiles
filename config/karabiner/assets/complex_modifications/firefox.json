@@ -1,0 +1,75 @@
+{
+  "title": "Firefox Mappings",
+  "rules": [
+    {
+      "description": "Firefox L-Cmd-open-bracket to Ctl-PgUp",
+      "manipulators": [
+        {
+          "from": {
+            "key_code": "open_bracket",
+            "modifiers": {
+              "mandatory": [
+                "left_command"
+              ],
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "page_up",
+              "modifiers": [
+                "left_control"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+               "type": "frontmost_application_if",
+               "bundle_identifiers": [
+                 "^org\\.mozilla\\.firefox$"
+               ]
+             }
+          ],
+          "type": "basic"
+        }
+      ]
+    },
+    {
+      "description": "Firefox L-Cmd-close-bracket to Ctl-PgDn",
+      "manipulators": [
+        {
+          "from": {
+            "key_code": "close_bracket",
+            "modifiers": {
+              "mandatory": [
+                "left_command"
+              ],
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "page_down",
+              "modifiers": [
+                "left_control"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+               "type": "frontmost_application_if",
+               "bundle_identifiers": [
+                 "^org\\.mozilla\\.firefox$"
+               ]
+             }
+          ],
+          "type": "basic"
+        }
+      ]
+    }
+  ]
+}

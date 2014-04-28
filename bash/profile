@@ -1,0 +1,31 @@
+PATH=~/bin:~/.local/bin:$PATH
+
+if [ "$(uname -s)" = "Darwin" ]; then
+	ruby_bin=$HOME/.gem/ruby/2.3.0/bin
+	PATH=$ruby_bin:$PATH
+
+	py_bin=$HOME/Library/Python/3.7/bin
+	PATH=$py_bin:$PATH
+
+	node_bin=/usr/local/opt/node@8/bin
+	[ -d "$node_bin" ] && PATH="$node_bin:$PATH"
+fi
+
+## http://stackoverflow.com/questions/10081293/install-npm-into-home-directory-with-distribution-nodejs-package-ubuntu
+NPM_PACKAGES="$HOME/.npm-packages"
+[ -d "$NPM_PACKAGES" ] || mkdir -p "$NPM_PACKAGES"
+[ -f "$HOME/.npmrc" ] || echo "prefix = $NPM_PACKAGES" >> $HOME/.npmrc
+PATH="$NPM_PACKAGES/bin:$PATH"
+export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
+
+# local cpan
+PERL_HOME=$HOME/perl5
+if [ -d "$PERL_HOME" ]; then
+	PATH="$PERL_HOME/bin${PATH:+:${PATH}}"
+	PERL5LIB="$PERL_HOME/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+	PERL_LOCAL_LIB_ROOT="$PERL_HOME${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+	PERL_MB_OPT="--install_base \"$PERL_HOME\""; export PERL_MB_OPT;
+	PERL_MM_OPT="INSTALL_BASE=$PERL_HOME"; export PERL_MM_OPT;
+fi
+
+export PATH

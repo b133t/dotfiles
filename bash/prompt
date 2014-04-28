@@ -1,0 +1,189 @@
+#!/bin/bash
+# based on https://gist.github.com/robbles/2211471
+# ⓥ ⎇  ϟ ᚠ ‧ ● ⦿ ‣ ✔ ✘ ✖ ★ Ξ 〒↯ ≈ ⁖ 𝑣
+
+# $1 is filename, echoes it going up dirs until $HOME but not including $HOME
+_upfind() {
+	dir=`pwd`
+	while [[ $dir =~ ^$HOME/ ]]; do
+		p=`find "$dir" -maxdepth 1 -name $1`
+		if [ ! -z $p ]; then
+			echo "$p"
+			return
+		fi
+		dir=`dirname "$dir"`
+	done
+}
+
+_virtualenv_auto_activate() {
+	# Deactivate if venv dir no longer exists OR not prefix of pwd
+	if [ "$VIRTUAL_ENV" ]; then
+		base=$(basename $VIRTUAL_ENV)
+		if [[ ! -d $VIRTUAL_ENV ]] || [[ ! $PWD/ =~ ^$(dirname $VIRTUAL_ENV)/ ]]; then
+			msg="Deactivating virtualenv"
+			deactivate
+			unset _VENV_PATH
+		fi
+	fi
+
+	# Check for symlink pointing to virtualenv
+	if [ -L ".venv" ]; then
+		# could be absolute or relative link, but the pwd is valid since we are in chpwd
+		dir=`dirname $(readlink .venv)`
+		base=`basename $(readlink .venv)`
+		[ "$dir" = "." ] \
+			&& _VENV_PATH="$(pwd -P)/$base" \
+			|| _VENV_PATH="$(cd $dir >/dev/null && pwd -P)/$base"
+
+	elif [ -d "venv" ]; then
+		_VENV_PATH=$(pwd -P)/venv
+
+	else
+		_d=$(_upfind venv)
+		[ -n "$_d" ] && _VENV_PATH=$_d
+	fi
+
+	# Check to see if already activated to avoid redundant activating
+	if [[ -n $_VENV_PATH && $VIRTUAL_ENV != $_VENV_PATH ]]; then
+		_VENV_NAME=$(basename `pwd`)
+		VIRTUAL_ENV_DISABLE_PROMPT=1
+		msg="Activating virtualenv"
+		source $_VENV_PATH/bin/activate
+	fi
+	#[ "$msg" ] && echo "$(tput bold)$msg$(tput sgr0)"
+}
+
+_java_set_home() {
+	local v=$1
+	if [ "$(uname -s)" = "Darwin" ]; then
+		local d=`ls -dt /Library/Java/JavaVirtualMachines/jdk${v}.* | head -1`
+		d=${d}Contents/Home
+		[ -d "$d" ] && JAVA_HOME=$d
+	fi
+	if [[ -n $JAVA_HOME && -d $JAVA_HOME ]]; then
+		msg="Setting JAVA_HOME=${JAVA_HOME}"
+		export JAVA_HOME
+	else
+		unset JAVA_HOME
+		echo "Error: JAVA_HOME could not be set"
+	fi
+}
+_java_auto_activate() {
+	unset msg
+
+	# unset if PWD is parent of JSET_PATH
+	if [[  -n $JSET_PATH && -n $JAVA_HOME && ! $PWD =~ ^$JSET_PATH ]]; then
+		msg="Unsetting JAVA_HOME"
+		unset JAVA_HOME && unset JSET_PATH
+	fi
+
+	local f11=$(_upfind .java11)
+	local f10=$(_upfind .java10)
+	local f8=$(_upfind .java8)
+	# if both are set, then the down dir has precedence; if both are same dir then use f11
+	if [[ -e $f11 && -e $f10 ]]; then
+		[[ $(dirname $f11) =~ ^$(dirname $f10) ]] && unset f10
+		[[ -e $f10 && $(dirname $f10) =~ ^$(dirname $f11) ]] && unset f11
+	fi
+	if [[ -e $f11 && -e $f8 ]]; then
+		[[ $(dirname $f11) =~ ^$(dirname $f8) ]] && unset f8
+		[[ -e $f8 && $(dirname $f8) =~ ^$(dirname $f11) ]] && unset f11
+	fi
+	if [[ -e $f10 && -e $f8 ]]; then
+		[[ $(dirname $f10) =~ ^$(dirname $f8) ]] && unset f8
+		[[ -e $f8 && $(dirname $f8) =~ ^$(dirname $f10) ]] && unset f10
+	fi
+	[[ $f11 ]] && local d=$(dirname $f11) && local v='-10'
+	[[ $f10 ]] && local d=$(dirname $f10) && local v='-9'
+	[[ $f8 ]]  && local d=$(dirname $f8)  && local v='1.8'
+
+	# if $d is newer, ie JSET_PATH is parent of $d, then unset
+	if [[ $d =~ ^$JSET_PATH/ ]]; then
+		unset JAVA_HOME && unset JSET_PATH
+	fi
+
+	if [[ -n $d && -z "$JAVA_HOME" ]]; then
+		JSET_PATH=$d
+		_java_set_home $v
+	fi
+
+	[ "$msg" ] && echo "$(tput bold)$msg$(tput sgr0)"
+}
+
+_pwdtail() { #returns the last 2 fields of the working directory
+	pwd|awk -F/ '{nlast = NF -1;print $nlast"/"$NF}'
+}
+
+_relpath() {
+	python -c 'import os.path, sys; print(os.path.relpath(sys.argv[1],sys.argv[2]))' "$1" "${2-$PWD}"
+}
+
+prompt_command() {
+	code=$?
+
+	# bash stores history in mem and writes it at exit but we want shared history:
+	# -a Append the 'new' history lines to the history file. These are history lines entered since
+	#    the beginning of the current bash session, but not already appended to the history file.
+	# -c Clear the history list by deleting all the entries.
+	# -r Read the contents of the history file and append them to the current history list.
+	history -a
+	history -c
+	history -r
+
+	# see PS1 below
+	ERR=
+	IDENT=
+	BRANCH=
+	JOBS=
+	VENV=
+
+	if [ $code -ne 0 ]; then
+		ERR='↵ $code '
+	fi
+	if [ "$(hostname -s)" != "1337b00k" ]; then
+		IDENT='[\u@\h] '
+	fi
+	if [ "\$(type -t __git_ps1)" ]; then
+		BRANCH="\$(__git_ps1 '⎇ \[$(tput sitm)\]%s\[$(tput ritm)\] ')"
+	fi
+	if [ "$(jobs -p)" ]; then
+		JOBS="[\j]"
+	fi
+
+	_virtualenv_auto_activate
+	if [[ -n $VIRTUAL_ENV ]]; then
+		local _h=$(dirname $VIRTUAL_ENV)
+		local _t=$(basename $VIRTUAL_ENV)
+		p="$(_relpath $_h $PWD)"
+		[ "$p" = "." ] && p="" || p="$p/"
+		p="$p$_t"
+		VENV="(\[$(tput sitm)\]$p\[$(tput ritm)\]) "
+	fi
+
+	_java_auto_activate
+
+	# set the titlebar to the last 2 fields of pwd
+	local _u=''
+	[ "$USER" != "brandon" ] && _u="${USER}@"
+	echo -ne "\033]0;[${_u}$(hostname -s)] ${PWD##*/}\007"
+
+	local GREEN="\[\033[0;32m\]"
+	local CYAN="\[\033[0;36m\]"
+	local BCYAN="\[\033[1;36m\]"
+	local BLUE="\[\033[0;34m\]"
+	local GRAY="\[\033[0;37m\]"
+	local DKGRAY="\[\033[1;30m\]"
+	local WHITE="\[\033[1;37m\]"
+	local RED="\[\033[0;31m\]"
+	local YELLOW="\[\033[0;33m\]"
+	local BRIGHT="\[\033[38;5;206m\]"
+	# return color to Terminal setting for text color
+	local DEFAULT="\[\033[0;39m\]"
+	# hilite, 3-dot prompt color
+	local HILITE=$BRIGHT
+	[[ $TERM_BACKGROUND == "dark" ]] && HILITE=$WHITE
+	export PS1="${RED}${ERR}${HILITE}●●● \
+${BLUE}${IDENT}${GREEN}${BRANCH}${BLUE}${VENV}\
+${YELLOW}\w${BCYAN}${JOBS}${DEFAULT}\$ "
+}
+PROMPT_COMMAND="prompt_command; ${PROMPT_COMMAND:+$PROMPT_COMMAND}"

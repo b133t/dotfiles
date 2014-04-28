@@ -1,0 +1,16 @@
+#!/bin/sh
+function _upfind() {
+	dir=`pwd`
+	while [[ $dir =~ ^$HOME ]]; do
+		p=`find "$dir" -maxdepth 1 -name $1`
+		if [ ! -z $p ]; then
+			echo "$p"
+			return
+		fi
+		dir=`dirname "$dir"`
+	done
+}
+
+GW="$(_upfind gradlew)"
+[ -z "$GW" ] && GW=gradle
+$GW "$@"

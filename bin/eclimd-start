@@ -1,0 +1,21 @@
+#!/bin/sh
+_dir=$1
+[ "$_dir" ] || _dir=$PWD
+_dir=$(cd $_dir; pwd)
+opts="-Dosgi.instance.area.default=$_dir"
+if [ "$(uname -s)" = "Darwin" ]; then
+	exe="$HOME/bin/Eclipse.app/Contents/Eclipse/eclimd"
+	[ -e "$exe" ] || exe="/Applications/bin/Eclipse.app/Contents/Eclipse/eclimd"
+	ECLIMD="$exe $opts"
+elif [ "$(uname -s)" = "Linux" ]; then
+	out=`ps aux -ww | grep "Xvfb :1" | grep -v grep`
+	[ ".$out" == "." ] && Xvfb :1 -screen 0 1024x768x24 &
+	exe="$HOME/.eclipse/org.eclipse.platform_793567567_linux_gtk_x86_64/eclimd"
+	ECLIMD="$exe $opts"
+fi
+if [ -e "$exe" ]; then
+	echo "> $ECLIMD >~/.tmp/eclimd.log &"
+	DISPLAY=:1 $ECLIMD >~/.tmp/eclimd.log &
+else
+	echo "> ERROR: no eclimd found on system"
+fi

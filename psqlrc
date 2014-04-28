@@ -1,0 +1,15 @@
+-- http://www.craigkerstiens.com/2015/12/29/my-postgres-top-10-for-2016/
+\set QUIET 1
+\pset null '∅'
+
+\set PROMPT1 '%[%033[1m%][%/] #%[%033[0m%] '
+\set PROMPT2 '%033[1m... #%[%033[0m '
+
+\timing
+
+\x auto
+\set VERBOSITY verbose
+\set HISTCONTROL ignoredups
+\set COMP_KEYWORD_CASE upper
+
+\unset QUIET

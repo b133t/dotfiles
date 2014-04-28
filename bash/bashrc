@@ -1,0 +1,58 @@
+[ -f $HOME/.bashrc.env ] && . $HOME/.bashrc.env
+
+# bash-completion
+[[ $PS1 && -f /etc/bash_completion ]] && . /etc/bash_completion
+[[ $PS1 && -f /usr/local/share/bash-completion/bash_completion ]] && . /usr/local/share/bash-completion/bash_completion
+
+bind "set completion-ignore-case on"
+bind "set completion-map-case on"
+bind "set show-all-if-ambiguous on"
+bind "set mark-symlinked-directories on"
+
+# autojump
+
+[[ -f /etc/profile.d/autojump.sh ]] && source /etc/profile.d/autojump.sh
+[[ -f /usr/local/etc/profile.d/autojump.sh ]] && source /usr/local/etc/profile.d/autojump.sh
+
+export EDITOR=vim
+
+if [ "$(uname -s)" = "Darwin" ]; then
+	export CLICOLOR=1
+	export GREP_OPTIONS='--color=auto'
+	export LSCOLORS=exfxcxdxbxegedabagacad
+
+	# http://drmuey.com/?do=page&id=15
+	export COPYFILE_DISABLE=true
+fi
+
+export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'
+
+[ -f ~/.fzf.bash ] && . ~/.fzf.bash
+#export FZF_DEFAULT_COMMAND='ag -g ""'
+#export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow'
+## https://mike.place/2017/fzf-fd/
+export FZF_DEFAULT_COMMAND='fd -t f'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND='fd -t d'
+
+[ -f "$HOME/.bash/aliases" ] && source "$HOME/.bash/aliases"
+
+## git
+if [ "$(uname -s)" = "Darwin" ]; then
+	source `xcode-select -p`/usr/share/git-core/git-completion.bash
+	source `xcode-select -p`/usr/share/git-core/git-prompt.sh
+else
+	source /usr/share/git-core/contrib/completion/git-prompt.sh
+fi
+
+source ~/.bash/prompt
+
+# history (after setting bash prompt)
+shopt -s histappend
+export HISTCONTROL=ignoredups:erasedups
+export HISTSIZE=100000
+export HISTFILESIZE=100000
+export HISTIGNORE="&:[ ]*:exit:ls:tree:bg:fg:history:clear:g pull"
+
+# tabcomplete these dirs from anywhere
+CDPATH=".:~"

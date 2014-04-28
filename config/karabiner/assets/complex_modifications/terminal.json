@@ -1,0 +1,66 @@
+{
+  "title": "Terminal.app Mappings",
+  "rules": [
+    {
+      "description": "Terminal L-Cmd-j and L-Cmd-k to Esc",
+      "manipulators": [
+        {
+          "from": {
+            "key_code": "j",
+            "modifiers": {
+              "mandatory": [
+                "left_command"
+              ],
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "escape"
+            }
+          ],
+          "conditions": [
+            {
+               "type": "frontmost_application_if",
+               "bundle_identifiers": [
+                 "^com\\.apple\\.Terminal$",
+                 "^org\\.vim\\.MacVim$"
+               ]
+             }
+          ],
+          "type": "basic"
+        },
+        {
+          "from": {
+            "key_code": "k",
+            "modifiers": {
+              "mandatory": [
+                "left_command"
+              ],
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "escape"
+            }
+          ],
+          "conditions": [
+            {
+               "type": "frontmost_application_if",
+               "bundle_identifiers": [
+                 "^com\\.apple\\.Terminal$",
+                 "^org\\.vim\\.MacVim$"
+               ]
+             }
+          ],
+          "type": "basic"
+        }
+      ]
+    }
+  ]
+}
