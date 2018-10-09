@@ -77,24 +77,21 @@ _java_auto_activate() {
 		unset JAVA_HOME && unset JSET_PATH
 	fi
 
+	local f12=$(_upfind .java12)
 	local f11=$(_upfind .java11)
-	local f10=$(_upfind .java10)
 	local f8=$(_upfind .java8)
-	# if both are set, then the down dir has precedence; if both are same dir then use f11
-	if [[ -e $f11 && -e $f10 ]]; then
-		[[ $(dirname $f11) =~ ^$(dirname $f10) ]] && unset f10
-		[[ -e $f10 && $(dirname $f10) =~ ^$(dirname $f11) ]] && unset f11
+	# if both then down (longer) dir has precedence; if both are same dir then use later
+	if [[ -e $f12 && -e $f11 ]]; then
+		[[ $(dirname $f12) =~ ^$(dirname $f11) ]] && unset f11 || unset f12
 	fi
 	if [[ -e $f11 && -e $f8 ]]; then
-		[[ $(dirname $f11) =~ ^$(dirname $f8) ]] && unset f8
-		[[ -e $f8 && $(dirname $f8) =~ ^$(dirname $f11) ]] && unset f11
+		[[ $(dirname $f11) =~ ^$(dirname $f8) ]] && unset f8 || unset f11
 	fi
-	if [[ -e $f10 && -e $f8 ]]; then
-		[[ $(dirname $f10) =~ ^$(dirname $f8) ]] && unset f8
-		[[ -e $f8 && $(dirname $f8) =~ ^$(dirname $f10) ]] && unset f10
+	if [[ -e $f12 && -e $f8 ]]; then
+		[[ $(dirname $f12) =~ ^$(dirname $f8) ]] && unset f8 || unset f12
 	fi
-	[[ $f11 ]] && local d=$(dirname $f11) && local v='-10'
-	[[ $f10 ]] && local d=$(dirname $f10) && local v='-9'
+	[[ $f12 ]] && local d=$(dirname $f12) && local v='-12'
+	[[ $f11 ]] && local d=$(dirname $f11) && local v='-11'
 	[[ $f8 ]]  && local d=$(dirname $f8)  && local v='1.8'
 
 	# if $d is newer, ie JSET_PATH is parent of $d, then unset
@@ -121,7 +118,7 @@ _relpath() {
 prompt_command() {
 	code=$?
 
-	# bash stores history in mem and writes it at exit but we want shared history:
+	# bash stores history in mem and writes it at exit but we want shared history b/ all shells:
 	# -a Append the 'new' history lines to the history file. These are history lines entered since
 	#    the beginning of the current bash session, but not already appended to the history file.
 	# -c Clear the history list by deleting all the entries.
@@ -130,7 +127,7 @@ prompt_command() {
 	history -c
 	history -r
 
-	# see PS1 below
+	# set for PS1 below
 	ERR=
 	IDENT=
 	BRANCH=
@@ -179,10 +176,8 @@ prompt_command() {
 	local BRIGHT="\[\033[38;5;206m\]"
 	# return color to Terminal setting for text color
 	local DEFAULT="\[\033[0;39m\]"
-	# hilite, 3-dot prompt color
-	local HILITE=$BRIGHT
-	[[ $TERM_BACKGROUND == "dark" ]] && HILITE=$WHITE
-	export PS1="${RED}${ERR}${HILITE}●●● \
+
+	export PS1="${RED}${ERR}${BRIGHT}●●● \
 ${BLUE}${IDENT}${GREEN}${BRANCH}${BLUE}${VENV}\
 ${YELLOW}\w${BCYAN}${JOBS}${DEFAULT}\$ "
 }

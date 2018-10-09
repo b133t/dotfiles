@@ -1,5 +1,5 @@
 [core]
-	excludesfile = ~/.gitignore
+	excludesfile = $HOME/.gitignore
 [push]
 	default = simple
 [color]
