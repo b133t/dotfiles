@@ -59,12 +59,6 @@ if [[ $(uname -s) == "Darwin" ]]; then
 		diffit config/$d/$f .config/$d/$f
 	done
 fi
-## .lein
-mkdir -p $HOME/.lein
-lein=$DOTFILES/bin/lein
-curl -s https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein -o $lein
-chmod +x $lein
-diffit profiles.clj .lein/profiles.clj
 ## bin
 mkdir -p $HOME/bin
 for f in `ls $DOTFILES/bin`; do

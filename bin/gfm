@@ -31,6 +31,6 @@ $(cat $css)
 	}
 </style>
 <body class="markdown-body">
-$(cmark-gfm $*)
+$(cmark-gfm -e autolink -e table $*)
 </body></html>
 EOF
