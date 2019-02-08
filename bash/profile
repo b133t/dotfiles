@@ -6,9 +6,6 @@ if [ "$(uname -s)" = "Darwin" ]; then
 
 	py_bin=$HOME/Library/Python/3.7/bin
 	PATH=$py_bin:$PATH
-
-	node_bin=/usr/local/opt/node@10/bin
-	[ -d "$node_bin" ] && PATH="$node_bin:$PATH"
 fi
 
 ## http://stackoverflow.com/questions/10081293/install-npm-into-home-directory-with-distribution-nodejs-package-ubuntu

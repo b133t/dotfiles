@@ -71,7 +71,7 @@ if [[ -d "$DOTFILES/bin/$(uname -s)" ]]; then
 	done
 fi
 # fzf
-{
+if [[ $opt_fzf ]]; then
 	pushd ~/bin/.fzf >/dev/null
 	git fetch >/dev/null 2>&1
 	$(git diff origin --quiet) || {
@@ -80,7 +80,7 @@ fi
 		./install --bin
 	}
 	popd >/dev/null
-}
+fi
 ## mutt
 if [[ $opt_mutt ]]; then
 	diffit muttrc .muttrc

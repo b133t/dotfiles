@@ -2,7 +2,6 @@
 
 * safari extensions
   lastpass
-  ublock origin
 
 * ssh-keygen (or copy)
 
@@ -31,7 +30,6 @@
 
 * bin/dotfiles
   $ cd bin
-  $ git clone --depth 1 https://github.com/junegunn/fzf.git .fzf
   $ git clone git@github.com:brandon133/dotfiles.git
   $ cd dotfiles && ./update
 

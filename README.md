@@ -31,8 +31,6 @@ Install:
 ~$ cd ~/bin && git clone https://github.com/brandon133/dotfiles.git
 ~$ cd ~/bin/dotfiles
 ~/bin/dotfiles$ ./update [--vim]
-
-# note: above installs fzf into ~/bin/.fzf
 ```
 
 Also, see `install-mac.txt`.

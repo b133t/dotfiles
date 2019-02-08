@@ -1,6 +1,6 @@
 #!/bin/bash
 # based on https://gist.github.com/robbles/2211471
-# ⓥ ⎇  ϟ ᚠ ‧ ● ⦿ ‣ ✔ ✘ ✖ ★ Ξ 〒↯ ≈ ⁖ 𝑣
+# ⓥ ⎇ Ⴤ ⑂ 𐀀 ϟ ǂ ᚠ ‧ ● ⦿ ‣ ✔ ✘ ✖ ★ Ξ 〒↯ ≈ ⁖ 𝑣
 
 # $1 is filename, echoes it going up dirs until $HOME but not including $HOME
 _upfind() {
