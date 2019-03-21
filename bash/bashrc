@@ -19,6 +19,7 @@ export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30
 # bash-completion
 [[ $PS1 && -f /etc/bash_completion ]] && . /etc/bash_completion
 [[ $PS1 && -f /usr/local/etc/bash_completion ]] && . /usr/local/etc/bash_completion
+[[ $PS1 && -f /usr/share/bash_completion/bash_completion ]] && . /usr/share/bash_completion/bash_completion
 bind "set completion-ignore-case on"
 bind "set completion-map-case on"
 bind "set show-all-if-ambiguous on"

@@ -46,7 +46,6 @@ done
 diffit bash_profile .bash_profile
 diffit bashrc .bashrc
 diffit inputrc .inputrc
-diffit fzf.bash .fzf.bash
 mkdir -p $HOME/.bash
 for f in `ls $DOTFILES/bash`; do
 	diffit bash/$f .bash/$f
@@ -70,17 +69,19 @@ if [[ -d "$DOTFILES/bin/$(uname -s)" ]]; then
 		diffit bin/$(uname -s)/$f bin/$f
 	done
 fi
-# fzf
-if [[ $opt_fzf ]]; then
-	pushd ~/bin/.fzf >/dev/null
-	git fetch >/dev/null 2>&1
-	$(git diff origin --quiet) || {
-		echo "Updating ~/bin/.fzf"
-		git pull
-		./install --bin
-	}
-	popd >/dev/null
-fi
+[ -d ~/bin/.fzf ] || {
+	echo "Installing fzf .."
+	git clone https://github.com/junegunn/fzf.git ~/bin/.fzf
+	~/bin/.fzf/install
+}
+pushd ~/bin/.fzf >/dev/null
+git fetch >/dev/null 2>&1
+$(git diff origin --quiet) || {
+	echo "Updating ~/bin/.fzf .."
+	git pull
+	./install --bin
+}
+popd >/dev/null
 ## mutt
 if [[ $opt_mutt ]]; then
 	diffit muttrc .muttrc
