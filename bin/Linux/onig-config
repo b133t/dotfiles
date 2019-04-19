@@ -27,7 +27,7 @@ if test $# -eq 0; then
   show_usage
 fi
 
-prefix=/home/brandon/bin/jq/target
+prefix=/usr/local
 exec_prefix=${prefix}
 is_set_exec_prefix=no
 
