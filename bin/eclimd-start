@@ -1,8 +1,7 @@
 #!/bin/sh
-_dir=$1
-[ "$_dir" ] || _dir=$PWD
-_dir=$(cd $_dir; pwd)
-opts="-Dosgi.instance.area.default=$_dir"
+dir=$1
+[ "$dir" ] || dir=$HOME/workspace
+opts="-Dosgi.instance.area.default=$(cd $dir; pwd)"
 if [ "$(uname -s)" = "Darwin" ]; then
 	exe="$HOME/bin/Eclipse.app/Contents/Eclipse/eclimd"
 	[ -e "$exe" ] || exe="/Applications/bin/Eclipse.app/Contents/Eclipse/eclimd"
@@ -10,7 +9,8 @@ if [ "$(uname -s)" = "Darwin" ]; then
 elif [ "$(uname -s)" = "Linux" ]; then
 	out=`ps aux -ww | grep "Xvfb :1" | grep -v grep`
 	[ ".$out" == "." ] && Xvfb :1 -screen 0 1024x768x24 &
-	exe="$HOME/.eclipse/org.eclipse.platform_793567567_linux_gtk_x86_64/eclimd"
+	#exe="$HOME/.eclipse/org.eclipse.platform_155965261_linux_gtk_x86_64/eclimd"
+	exe="$HOME/workspace/eclipse/java-2019-03/eclipse/eclimd"
 	ECLIMD="$exe $opts"
 fi
 if [ -e "$exe" ]; then

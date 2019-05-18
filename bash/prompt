@@ -54,13 +54,17 @@ _virtualenv_auto_activate() {
 }
 
 _java_set_home() {
-	local v=$1
+	local vers=$1
 	if [ "$(uname -s)" = "Darwin" ]; then
-		local d=`ls -dt /Library/Java/JavaVirtualMachines/jdk${v}.* | head -1`
-		d=${d}Contents/Home
-		[ -d "$d" ] && JAVA_HOME=$d
+		[[ "$vers" != "1.8.0" ]] && vers="-$vers"
+		local dir=`ls -dt /Library/Java/JavaVirtualMachines/jdk${vers}.* | head -1`
+		dir=${dir}Contents/Home
+		[ -d "$dir" ] && JAVA_HOME=$dir
+	elif [ "$(uname -s)" = "Linux" ]; then
+		local dir="/usr/lib/jvm/java-${vers}-openjdk"
+		[ -d "$dir" ] && JAVA_HOME=$dir
 	fi
-	if [[ -n $JAVA_HOME && -d $JAVA_HOME ]]; then
+	if [[ -d $JAVA_HOME ]]; then
 		msg="Setting JAVA_HOME=${JAVA_HOME}"
 		export JAVA_HOME
 	else
@@ -71,37 +75,52 @@ _java_set_home() {
 _java_auto_activate() {
 	unset msg
 
-	# unset if PWD is parent of JSET_PATH
-	if [[  -n $JSET_PATH && -n $JAVA_HOME && ! $PWD =~ ^$JSET_PATH ]]; then
-		msg="Unsetting JAVA_HOME"
-		unset JAVA_HOME && unset JSET_PATH
+	# unset if PWD (common parent) is parent of JSET_PATH
+	if [[  -n $JSET_PATH && -n $JAVA_HOME ]]; then
+		local common_parent=$(printf "%s\n%s\n" "$JSET_PATH" "$PWD" | sed -e 'N;s/^\(.*\).*\n\1.*$/\1/')
+		if [[  ! $common_parent =~ ^$JSET_PATH ]]; then
+			msg="Unsetting JAVA_HOME"
+			unset JAVA_HOME && unset JSET_PATH
+			if [[ -n $JSET_OLD_PATH ]]; then
+				export PATH=$JSET_OLD_PATH
+				unset JSET_OLD_PATH
+			fi
+		fi
 	fi
 
-	local f12=$(_upfind .java12)
-	local f11=$(_upfind .java11)
-	local f8=$(_upfind .java8)
+	local java12=$(_upfind .java12)
+	local java11=$(_upfind .java11)
+	local java8=$(_upfind .java8)
 	# if both then down (longer) dir has precedence; if both are same dir then use later
-	if [[ -e $f12 && -e $f11 ]]; then
-		[[ $(dirname $f12) =~ ^$(dirname $f11) ]] && unset f11 || unset f12
+	if [[ -e $java12 && -e $java11 ]]; then
+		[[ $(dirname $java12) =~ ^$(dirname $java11) ]] && unset java11 || unset java12
 	fi
-	if [[ -e $f11 && -e $f8 ]]; then
-		[[ $(dirname $f11) =~ ^$(dirname $f8) ]] && unset f8 || unset f11
+	if [[ -e $java11 && -e $java8 ]]; then
+		[[ $(dirname $java11) =~ ^$(dirname $java8) ]] && unset java8 || unset java11
 	fi
-	if [[ -e $f12 && -e $f8 ]]; then
-		[[ $(dirname $f12) =~ ^$(dirname $f8) ]] && unset f8 || unset f12
+	if [[ -e $java12 && -e $java8 ]]; then
+		[[ $(dirname $java12) =~ ^$(dirname $java8) ]] && unset java8 || unset java12
 	fi
-	[[ $f12 ]] && local d=$(dirname $f12) && local v='-12'
-	[[ $f11 ]] && local d=$(dirname $f11) && local v='-11'
-	[[ $f8 ]]  && local d=$(dirname $f8)  && local v='1.8'
+	[[ $java12 ]] && local dir=$(dirname $java12) && local vers='12'
+	[[ $java11 ]] && local dir=$(dirname $java11) && local vers='11'
+	[[ $java8 ]]  && local dir=$(dirname $java8)  && local vers='1.8.0'
 
-	# if $d is newer, ie JSET_PATH is parent of $d, then unset
-	if [[ $d =~ ^$JSET_PATH/ ]]; then
+	# if $dir is newer (JSET_PATH is parent of $dir) then unset
+	if [[ $dir =~ ^$JSET_PATH/ ]]; then
 		unset JAVA_HOME && unset JSET_PATH
 	fi
 
-	if [[ -n $d && -z "$JAVA_HOME" ]]; then
-		JSET_PATH=$d
-		_java_set_home $v
+	if [[ -n $dir && -z "$JAVA_HOME" ]]; then
+		JSET_PATH=$dir
+		_java_set_home $vers
+
+		if [ "$(uname -s)" = "Linux" ]; then
+			if [[ -n $JSET_OLD_PATH ]]; then
+				PATH=$JSET_OLD_PATH
+			fi
+			JSET_OLD_PATH=$PATH
+			export PATH=$JAVA_HOME/bin:$PATH
+		fi
 	fi
 
 	[ "$msg" ] && echo "$(tput bold)$msg$(tput sgr0)"

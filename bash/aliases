@@ -7,15 +7,9 @@ alias 5='fg %5'
 alias k1='kill -HUP %1 && fg'
 alias k2='kill -HUP %2 && fg'
 
-alias maek='make'
-
 alias ls='ls -F'
-
-alias ag='ag --color-path "1;36" --color-match "1;31" --color-line-number "0"'
-# blue+bold in solarized palette is gray
-alias rg='rg --smart-case --colors path:fg:blue --colors path:style:bold --colors line:none'
-
-alias compose='docker-compose'
+alias trim='cut -c-$(tput cols)'
+alias vim='gvim -v'
 
 alias g='git'
 alias gd='git diff'
@@ -23,15 +17,20 @@ alias gst='git status'
 
 if [ "$(uname -s)" = "Darwin" ]; then
 	alias brewup='brew update && brew upgrade && brew cleanup -s'
-
 	alias venv2=$HOME/Library/Python/2.7/bin/virtualenv
 else
-
 	alias ls='ls -F --color=always'
 fi
 
-alias pip-latest="pip freeze --local | cut -d = -f 1 | xargs -n 1 pip search | grep -B2 'LATEST:'"
+alias ag='ag --color-path "1;36" --color-match "1;31" --color-line-number "0"'
+# blue+bold in solarized palette is gray
+alias rg='rg --smart-case --colors path:fg:blue --colors path:style:bold --colors line:none'
 
 alias tagspy='ctags -R --fields=+l --languages=python --python-kinds=-iv $(python -c "import os, sys; print('"'"' '"'"'.join('"'"'{}'"'"'.format(d) for d in sys.path if os.path.isdir(d)))")'
+alias ant='~/workspace/apache-ant-1.10.5/bin/ant'
+alias mvn='~/workspace/apache-maven-3.6.1/bin/mvn'
+alias pip-latest="pip freeze --local | cut -d = -f 1 | xargs -n 1 pip search | grep -B2 'LATEST:'"
+alias compose='docker-compose'
 
-alias trim='cut -c-$(tput cols)'
+## mis-spellings
+alias maek='make'

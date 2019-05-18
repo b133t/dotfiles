@@ -1,3 +1,3 @@
 scriptencoding utf-8
-source $HOME/.vim/vimrc
+source ~/.vim/vimrc
 " --- overrides
