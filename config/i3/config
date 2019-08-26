@@ -166,7 +166,7 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
-bindsym $mod+Shift+l exec xscreensaver-command -l
+#bindsym $mod+Shift+l exec xscreensaver-command -l
 bindsym $mod+Tab exec rofi -show window
 bindsym Alt1+Tab exec rofi -show window
 
@@ -208,5 +208,5 @@ bindsym --release Shift+Print exec scrot -s 'screenshot_%Y%m%d_%H%M%S.png' -e 'm
 #bindsym Control+Print exec gnome-screenshot -i
 
 #exec --no-startup-id xss-lock -- i3lock -n -i ~/.i3/lock-screen.png
-#exec --no-startup-id xss-lock -- i3lock -n
-exec /usr/bin/xscreensaver -no-splash
+exec --no-startup-id xss-lock -- i3lock -n
+#exec /usr/bin/xscreensaver -no-splash
