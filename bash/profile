@@ -1,5 +1,3 @@
-PATH=~/bin:~/.local/bin:$PATH
-
 if [ "$(uname -s)" = "Darwin" ]; then
 	ruby_bin=$HOME/.gem/ruby/2.3.0/bin
 	PATH=$ruby_bin:$PATH
@@ -25,4 +23,8 @@ if [ -d "$PERL_HOME" ]; then
 	PERL_MM_OPT="INSTALL_BASE=$PERL_HOME"; export PERL_MM_OPT;
 fi
 
+## java tools
+PATH="$HOME/workspace/apache-maven-3.6.1/bin:$HOME/workspace/apache-ant-1.10.5/bin:$PATH"
+
+PATH=~/bin:~/.local/bin:$PATH
 export PATH

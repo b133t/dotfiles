@@ -2,6 +2,8 @@
 
 * safari extensions
   lastpass
+  badger privacy
+  ublock origin
 
 * ssh-keygen (or copy)
 
@@ -15,6 +17,8 @@
   https://www.sparklabs.com/viscosity/
   copy and import bin/vpn-ca.crt bin/vpn-client.ovpn
 
+* nordvpn
+
 * brew packages:
   bash (bash4)
   bash-completion@2
@@ -24,6 +28,7 @@
   python (py3)
   redis
   ripgrep
+  rsync
   the_silver_searcher
   tree
   universal-ctags --HEAD
@@ -32,9 +37,6 @@
   $ cd bin
   $ git clone git@github.com:brandon133/dotfiles.git
   $ cd dotfiles && ./update
-
-  ln -s /Applications/MacVim.app/Contents/bin/mvim ~/bin/gvim
-  ln -s /Applications/MacVim.app/Contents/bin/mvim ~/bin/vim
 
 * vim
   install macvim: (via MacVim.dmg) - don't use brew since it'll install py2

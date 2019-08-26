@@ -27,8 +27,6 @@ alias ag='ag --color-path "1;36" --color-match "1;31" --color-line-number "0"'
 alias rg='rg --smart-case --colors path:fg:blue --colors path:style:bold --colors line:none'
 
 alias tagspy='ctags -R --fields=+l --languages=python --python-kinds=-iv $(python -c "import os, sys; print('"'"' '"'"'.join('"'"'{}'"'"'.format(d) for d in sys.path if os.path.isdir(d)))")'
-alias ant='~/workspace/apache-ant-1.10.5/bin/ant'
-alias mvn='~/workspace/apache-maven-3.6.1/bin/mvn'
 alias pip-latest="pip freeze --local | cut -d = -f 1 | xargs -n 1 pip search | grep -B2 'LATEST:'"
 alias compose='docker-compose'
 

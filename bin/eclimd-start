@@ -1,21 +1,13 @@
 #!/bin/sh
-dir=$1
-[ "$dir" ] || dir=$HOME/workspace
-opts="-Dosgi.instance.area.default=$(cd $dir; pwd)"
 if [ "$(uname -s)" = "Darwin" ]; then
-	exe="$HOME/bin/Eclipse.app/Contents/Eclipse/eclimd"
-	[ -e "$exe" ] || exe="/Applications/bin/Eclipse.app/Contents/Eclipse/eclimd"
-	ECLIMD="$exe $opts"
+	eclimd="$HOME/bin/Eclipse.app/Contents/Eclipse/eclimd"
+	[ -e "$eclimd" ] || eclimd="/Applications/bin/Eclipse.app/Contents/Eclipse/eclimd"
 elif [ "$(uname -s)" = "Linux" ]; then
 	out=`ps aux -ww | grep "Xvfb :1" | grep -v grep`
 	[ ".$out" == "." ] && Xvfb :1 -screen 0 1024x768x24 &
-	#exe="$HOME/.eclipse/org.eclipse.platform_155965261_linux_gtk_x86_64/eclimd"
-	exe="$HOME/workspace/eclipse/java-2019-03/eclipse/eclimd"
-	ECLIMD="$exe $opts"
+	#eclimd="$HOME/.eclipse/org.eclipse.platform_155965261_linux_gtk_x86_64/eclimd"
+	eclimd="$HOME/bin/eclipse/eclimd"
 fi
-if [ -e "$exe" ]; then
-	echo "> $ECLIMD >~/.tmp/eclimd.log &"
-	DISPLAY=:1 $ECLIMD >~/.tmp/eclimd.log &
-else
-	echo "> ERROR: no eclimd found on system"
-fi
+[ -e "$eclimd" ] || { echo "> Exec \`$eclimd\` does not exist"; exit 1; }
+echo "> $eclimd $* &"
+DISPLAY=:1 $eclimd $* &
