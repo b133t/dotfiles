@@ -9,7 +9,6 @@ alias k2='kill -HUP %2 && fg'
 
 alias ls='ls -F'
 alias trim='cut -c-$(tput cols)'
-alias vim='gvim -v'
 
 alias g='git'
 alias gd='git diff'

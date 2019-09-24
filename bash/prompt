@@ -154,13 +154,13 @@ prompt_command() {
 	VENV=
 
 	if [ $code -ne 0 ]; then
-		ERR='↵ $code '
+		ERR='↵$code '
 	fi
-	if [ "$(hostname -s)" != "1337b00k" ]; then
+	if [ "$(hostname -s)" != "thinkfast" ]; then
 		IDENT='[\u@\h] '
 	fi
 	if [ "\$(type -t __git_ps1)" ]; then
-		BRANCH="\$(__git_ps1 '⎇ \[$(tput sitm)\]%s\[$(tput ritm)\] ')"
+		BRANCH="\$(__git_ps1 '↯\[$(tput sitm)\]%s\[$(tput ritm)\] ')"
 	fi
 	if [ "$(jobs -p)" ]; then
 		JOBS="[\j]"
@@ -196,7 +196,7 @@ prompt_command() {
 	# return color to Terminal setting for text color
 	local DEFAULT="\[\033[0;39m\]"
 
-	export PS1="${RED}${ERR}${BRIGHT}●●● \
+	export PS1="${RED}${ERR}${BRIGHT}⦿⦿⦿ \
 ${BLUE}${IDENT}${GREEN}${BRANCH}${BLUE}${VENV}\
 ${YELLOW}\w${BCYAN}${JOBS}${DEFAULT}\$ "
 }

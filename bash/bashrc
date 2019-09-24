@@ -30,16 +30,20 @@ bind "set mark-symlinked-directories on"
 #export FZF_DEFAULT_COMMAND='ag -g ""'
 #export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow'
 ## https://mike.place/2017/fzf-fd/
-export FZF_DEFAULT_COMMAND='fd -t f'
+## ubuntu installs as "fdfind"
+type "fdfind" &>/dev/null && fd=fdfind || fd=fd
+export FZF_DEFAULT_COMMAND="$fd -t f"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND='fd -t d'
+export FZF_ALT_C_COMMAND="$fd -t d"
 
 ## git
 if [ "$(uname -s)" = "Darwin" ]; then
 	source `xcode-select -p`/usr/share/git-core/git-completion.bash
 	source `xcode-select -p`/usr/share/git-core/git-prompt.sh
-else
+elif [ -f "source /usr/share/git-core/contrib/completion/git-prompt.sh" ]; then
 	source /usr/share/git-core/contrib/completion/git-prompt.sh
+elif [ -f "/etc/bash_completion.d/git-prompt" ]; then
+	source /etc/bash_completion.d/git-prompt
 fi
 
 # set the bash prompt
@@ -58,7 +62,8 @@ CDPATH=".:~"
 # autojump
 if [ -f "/etc/profile.d/autojump.sh" ]; then
 	. /etc/profile.d/autojump.sh
-fi
-if [ -f "/usr/local/etc/profile.d/autojump.sh" ]; then
+elif [ -f "/usr/local/etc/profile.d/autojump.sh" ]; then
 	. /usr/local/etc/profile.d/autojump.sh
+elif [ -f "/usr/share/autojump/autojump.sh" ]; then
+	. /usr/share/autojump/autojump.sh
 fi
