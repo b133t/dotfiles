@@ -156,7 +156,7 @@ prompt_command() {
 	if [ $code -ne 0 ]; then
 		ERR='↵$code '
 	fi
-	if [ "$(hostname -s)" != "thinkfast" ]; then
+	if [ "$(hostname -s)" != "$MY_HOSTNAME" ]; then
 		IDENT='[\u@\h] '
 	fi
 	if [ "\$(type -t __git_ps1)" ]; then
@@ -180,7 +180,7 @@ prompt_command() {
 
 	# set the titlebar to the last 2 fields of pwd
 	local _u=''
-	[ "$USER" != "brandon" ] && _u="${USER}@"
+	[ "$USER" != "$MY_USER" ] && _u="${USER}@"
 	echo -ne "\033]0;[${_u}$(hostname -s)] ${PWD##*/}\007"
 
 	local GREEN="\[\033[0;32m\]"

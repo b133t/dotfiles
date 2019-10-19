@@ -14,10 +14,6 @@ fi
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
 
-# vcxsrv, also see https://github.com/Microsoft/WSL/issues/892
-#export DISPLAY=:0
-export DISPLAY=localhost:0.0
-
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$("$HOME/bin/anaconda3/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
@@ -32,4 +28,3 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
-

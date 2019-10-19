@@ -13,23 +13,17 @@
 * install homebrew:
   /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-* viscosity
-  https://www.sparklabs.com/viscosity/
-  copy and import bin/vpn-ca.crt bin/vpn-client.ovpn
-
-* nordvpn
-
 * brew packages:
-  bash (bash4)
+  bash (bash 5)
   bash-completion@2
   cmark-gfm
+  fd
   jq --HEAD
   postgres
   python (py3)
   redis
   ripgrep
   rsync
-  the_silver_searcher
   tree
   universal-ctags --HEAD
 
