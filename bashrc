@@ -4,8 +4,16 @@ case $- in
 	*) return;;
 esac
 
-# don't like wsl defaults
+# bad WSL defaults
 umask 002
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	SESSION_TYPE=remote/ssh
+else
+	case $(ps -o comm= -p $PPID) in
+		sshd|*/sshd) SESSION_TYPE=remote/ssh;;
+	esac
+fi
 
 if [ "-f $HOME/.bash/bashrc" ]; then
 	. $HOME/.bash/bashrc
