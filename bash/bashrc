@@ -67,3 +67,8 @@ elif [ -f "/usr/local/etc/profile.d/autojump.sh" ]; then
 elif [ -f "/usr/share/autojump/autojump.sh" ]; then
 	. /usr/share/autojump/autojump.sh
 fi
+
+## tmux
+[ "$SESSION_TYPE" = "remote/ssh" ] && \
+	export TMUX_SYM='🔒' || \
+	export TMUX_SYM='⚡'
