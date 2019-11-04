@@ -1,6 +1,6 @@
 #!/bin/bash
 # based on https://gist.github.com/robbles/2211471
-# ⓥ ⎇ Ⴤ ⑂ 𐀀 ϟ ǂ ᚠ ‧ ● ⦿ ‣ ✔ ✘ ✖ ★ Ξ 〒↯ ≈ ⁖ 𝑣
+# ⓥ ⎇ Ⴤ ⑂ 𐀀 ϟ ǂ ᚠ ‧ ● ⦿ ‣ ✔ ✘ ✖ ★ Ξ 〒↯ ≈ ⁖ 𝑣 ↵ 
 
 # $1 is filename, echoes it going up dirs until $HOME but not including $HOME
 _upfind() {
@@ -154,7 +154,7 @@ prompt_command() {
 	VENV=
 
 	if [ $code -ne 0 ]; then
-		ERR='↵$code '
+		ERR='${code}↵ '
 	fi
 	if [ "$SESSION_TYPE" == "remote/ssh" ]; then
 		IDENT='[\u@\h] '

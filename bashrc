@@ -4,14 +4,14 @@ case $- in
 	*) return;;
 esac
 
-# bad WSL defaults
+# fix unfortunate WSL defaults
 umask 002
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	SESSION_TYPE=remote/ssh
 else
 	case $(ps -o comm= -p $PPID) in
-		sshd|*/sshd) SESSION_TYPE=remote/ssh;;
+		sshd|*/sshd ) SESSION_TYPE=remote/ssh;;
 	esac
 fi
 
@@ -21,9 +21,3 @@ fi
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
-
-
-# --- overrides
-if [ -f "$HOME/.bash_env" ]; then
-	source "$HOME/.bash_env"
-fi

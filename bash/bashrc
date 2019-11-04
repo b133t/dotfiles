@@ -1,5 +1,3 @@
-[ -f $HOME/.bashrc.env ] && . $HOME/.bashrc.env
-
 export GPG_TTY=$(tty)
 export EDITOR=vim
 
@@ -72,3 +70,9 @@ fi
 [ "$SESSION_TYPE" = "remote/ssh" ] && \
 	export TMUX_SYM='🔒' || \
 	export TMUX_SYM='⚡'
+
+# --- local
+DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
+if [ -f "$DIR/bashrc.local" ]; then
+	source "$DIR/bashrc.local"
+fi

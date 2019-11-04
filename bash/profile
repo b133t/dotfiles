@@ -24,7 +24,7 @@ if [ -d "$PERL_HOME" ]; then
 fi
 
 ## java tools
-PATH="$HOME/workspace/apache-maven-3.6.1/bin:$HOME/workspace/apache-ant-1.10.5/bin:$PATH"
+PATH="$HOME/workspace/maven/bin:$HOME/workspace/ant/bin:$PATH"
 
 PATH=~/bin:~/.local/bin:$PATH
 export PATH
