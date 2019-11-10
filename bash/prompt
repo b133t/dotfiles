@@ -153,11 +153,13 @@ prompt_command() {
 	JOBS=
 	VENV=
 
+	dots='●●●'
 	if [ $code -ne 0 ]; then
 		ERR='${code}↵ '
 	fi
 	if [ "$SESSION_TYPE" == "remote/ssh" ]; then
 		IDENT='[\u@\h] '
+		dots='⦿⦿⦿'
 	fi
 	if [ "\$(type -t __git_ps1)" ]; then
 		BRANCH="\$(__git_ps1 '↯\[$(tput sitm)\]%s\[$(tput ritm)\] ')"
@@ -198,7 +200,7 @@ prompt_command() {
 	# return color to Terminal setting for text color
 	local DEFAULT="\[\033[0;39m\]"
 
-	export PS1="${RED}${ERR}${BRIGHT}⦿⦿⦿ \
+	export PS1="${RED}${ERR}${BRIGHT}${dots} \
 ${BLUE}${IDENT}${GREEN}${BRANCH}${BLUE}${VENV}\
 ${YELLOW}\w${BCYAN}${JOBS}${DEFAULT}\$ "
 }
