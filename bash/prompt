@@ -57,7 +57,7 @@ _java_set_home() {
 	local vers=$1
 	if [ "$(uname -s)" = "Darwin" ]; then
 		[[ "$vers" != "1.8.0" ]] && vers="-$vers"
-		local dir=`ls -dt /Library/Java/JavaVirtualMachines/jdk${vers}.* | head -1`
+		local dir=`ls -dt /Library/Java/JavaVirtualMachines/jdk${vers}* | head -1`
 		dir=${dir}Contents/Home
 		[ -d "$dir" ] && JAVA_HOME=$dir
 	elif [ "$(uname -s)" = "Linux" ]; then
@@ -153,13 +153,27 @@ prompt_command() {
 	JOBS=
 	VENV=
 
+	local GREEN="\[\033[0;32m\]"
+	local CYAN="\[\033[0;36m\]"
+	local BCYAN="\[\033[1;36m\]"
+	local BLUE="\[\033[0;34m\]"
+	local GRAY="\[\033[0;37m\]"
+	local DKGRAY="\[\033[1;30m\]"
+	local WHITE="\[\033[1;37m\]"
+	local RED="\[\033[0;31m\]"
+	local YELLOW="\[\033[0;33m\]"
+	local BRIGHT="\[\033[38;5;206m\]"
+	# return color to Terminal setting for text color
+	local DEFAULT="\[\033[0;39m\]"
+
 	dots='●●●'
 	if [ $code -ne 0 ]; then
 		ERR='${code}↵ '
 	fi
 	if [ "$SESSION_TYPE" == "remote/ssh" ]; then
 		IDENT='[\u@\h] '
-		dots='⦿⦿⦿'
+		#dots="${CYAN}⦿⦿⦿"
+		dots="${CYAN}${dots}"
 	fi
 	if [ "\$(type -t __git_ps1)" ]; then
 		BRANCH="\$(__git_ps1 '↯\[$(tput sitm)\]%s\[$(tput ritm)\] ')"
@@ -186,19 +200,6 @@ prompt_command() {
 		_u="${USER}@"
 	fi
 	echo -ne "\033]0;[${_u}$(hostname -s)] ${PWD##*/}\007"
-
-	local GREEN="\[\033[0;32m\]"
-	local CYAN="\[\033[0;36m\]"
-	local BCYAN="\[\033[1;36m\]"
-	local BLUE="\[\033[0;34m\]"
-	local GRAY="\[\033[0;37m\]"
-	local DKGRAY="\[\033[1;30m\]"
-	local WHITE="\[\033[1;37m\]"
-	local RED="\[\033[0;31m\]"
-	local YELLOW="\[\033[0;33m\]"
-	local BRIGHT="\[\033[38;5;206m\]"
-	# return color to Terminal setting for text color
-	local DEFAULT="\[\033[0;39m\]"
 
 	export PS1="${RED}${ERR}${BRIGHT}${dots} \
 ${BLUE}${IDENT}${GREEN}${BRANCH}${BLUE}${VENV}\

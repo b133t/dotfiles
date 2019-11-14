@@ -80,7 +80,7 @@ $(git diff origin --quiet) || {
 	echo "Updating ~/bin/.fzf .."
 	git pull
 	./install --bin
-	cp plugin/fzf.bin ~/.vim/plugin/fzf.bin
+	cp -v plugin/fzf.vim ~/.vim/plugin/fzf.vim
 }
 popd >/dev/null
 ## mutt
