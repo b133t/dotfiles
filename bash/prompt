@@ -134,7 +134,25 @@ _relpath() {
 	python -c 'import os.path, sys; print(os.path.relpath(sys.argv[1],sys.argv[2]))' "$1" "${2-$PWD}"
 }
 
-prompt_command() {
+# https://gist.github.com/laggardkernel/6cb4e1664574212b125fbfd115fe90a4
+_chpwd_hook() {
+  shopt -s nullglob
+
+  local f
+
+  # run commands in CHPWD_COMMAND variable on dir change
+  if [[ "$PREVPWD" != "$PWD" ]]; then
+    local IFS=$';'
+    for f in $CHPWD_COMMAND; do
+      "$f"
+    done
+    unset IFS
+  fi
+  # refresh last working dir record
+  export PREVPWD="$PWD"
+}
+
+_prompt_command() {
 	code=$?
 
 	# bash stores history in mem and writes it at exit but we want shared history b/ all shells:
@@ -182,17 +200,19 @@ prompt_command() {
 		JOBS="[\j]"
 	fi
 
-	_virtualenv_auto_activate
-	if [[ -n $VIRTUAL_ENV ]]; then
-		local _h=$(dirname $VIRTUAL_ENV)
-		local _t=$(basename $VIRTUAL_ENV)
-		p="$(_relpath $_h $PWD)"
-		[ "$p" = "." ] && p="" || p="$p/"
-		p="$p$_t"
-		VENV="(\[$(tput sitm)\]$p\[$(tput ritm)\]) "
-	fi
+	if [[ "$PREVPWD" != "$PWD" ]]; then
+		_virtualenv_auto_activate
+		if [[ -n $VIRTUAL_ENV ]]; then
+			local _h=$(dirname $VIRTUAL_ENV)
+			local _t=$(basename $VIRTUAL_ENV)
+			p="$(_relpath $_h $PWD)"
+			[ "$p" = "." ] && p="" || p="$p/"
+			p="$p$_t"
+			VENV="(\[$(tput sitm)\]$p\[$(tput ritm)\]) "
+		fi
 
-	_java_auto_activate
+		_java_auto_activate
+	fi
 
 	# set the titlebar to the last 2 fields of pwd
 	local _u=''
@@ -205,4 +225,9 @@ prompt_command() {
 ${BLUE}${IDENT}${GREEN}${BRANCH}${BLUE}${VENV}\
 ${YELLOW}\w${BCYAN}${JOBS}${DEFAULT}\$ "
 }
-PROMPT_COMMAND="prompt_command; ${PROMPT_COMMAND:+$PROMPT_COMMAND}"
+
+# either: 1) if [[ "$PREVPWD" != "$PWD" ]]; then .. (in _prompt_command)
+#     or: 2) append the command into CHPWD_COMMAND:
+#CHPWD_COMMAND="${CHPWD_COMMAND:+$CHPWD_COMMAND;}_some_bash_fn"
+
+PROMPT_COMMAND="_prompt_command; _chpwd_hook; ${PROMPT_COMMAND:+$PROMPT_COMMAND}"

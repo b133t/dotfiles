@@ -1,5 +1,4 @@
 #!/bin/bash
-DOTFILES=`cd $(dirname $0); pwd`
 
 ## options
 while [[ ".$1" != "." ]]; do
@@ -12,9 +11,9 @@ while [[ ".$1" != "." ]]; do
 	shift
 done
 
-## diffs <path of real file from $HOME> <reference file in git>
+## diffs <reference file in git> <path of real file from $HOME>
 diffit() {
-	src=$DOTFILES/$1
+	src=${0%/*}/$1
 	dst=$HOME/$2
 	[[ -f $dst ]] || cp $src $dst
 	if [[ -n $opt_vim ]]; then
@@ -28,6 +27,17 @@ diffit() {
 		diff -q $dst $src
 	fi
 }
+## copy src file if doesn't exist in dst directory
+copy_if_not_exist() {
+	src=$1
+	dst=$2
+	for f in `ls $src`; do
+		[ -d "$f" ] && continue
+		if [ ! -f "$dst/$f" ]; then
+			cp -v "$src/$f" "$dst/"
+		fi
+	done
+}
 
 ## config
 diffit ignore .ignore
@@ -39,33 +49,35 @@ diffit psqlrc .psqlrc
 diffit gemrc .gemrc
 ## ctags.d
 mkdir -p $HOME/.ctags.d
-for f in `ls $DOTFILES/ctags.d`; do
+for f in `ls ${0%/*}/ctags.d`; do
 	diffit ctags.d/$f .ctags.d/$f
 done
+copy_if_not_exist $HOME/.ctags.d ${0%/*}/ctags.d
 ## bash
 diffit bash_profile .bash_profile
 diffit bashrc .bashrc
 diffit inputrc .inputrc
 mkdir -p $HOME/.bash
-for f in `ls $DOTFILES/bash`; do
+for f in `ls ${0%/*}/bash`; do
 	diffit bash/$f .bash/$f
 done
 ## karabiner
 if [[ $(uname -s) == "Darwin" ]]; then
-	mkdir -p "$HOME/.config/$d"
 	d=karabiner/assets/complex_modifications
-	for f in `ls $DOTFILES/config/$d`; do
+	mkdir -p "$HOME/.config/$d"
+	for f in `ls ${0%/*}/config/$d`; do
 		diffit config/$d/$f .config/$d/$f
 	done
+	copy_if_not_exist "$HOME/.config/$d" "${0%/*}/config/$d"
 fi
 ## bin
 mkdir -p $HOME/bin
-for f in `ls $DOTFILES/bin`; do
-	[[ -d "$DOTFILES/bin/$f" ]] && continue
+for f in `ls ${0%/*}/bin`; do
+	[[ -d "${0%/*}/bin/$f" ]] && continue
 	diffit bin/$f bin/$f
 done
-if [[ -d "$DOTFILES/bin/$(uname -s)" ]]; then
-	for f in `ls $DOTFILES/bin/$(uname -s)`; do
+if [[ -d "${0%/*}/bin/$(uname -s)" ]]; then
+	for f in `ls ${0%/*}/bin/$(uname -s)`; do
 		diffit bin/$(uname -s)/$f bin/$f
 	done
 fi
@@ -87,7 +99,8 @@ popd >/dev/null
 if [[ $opt_mutt ]]; then
 	diffit muttrc .muttrc
 	mkdir -p $HOME/.mutt
-	for f in `ls $DOTFILES/mutt`; do
+	for f in `ls ${0%/*}/mutt`; do
 		diffit mutt/$f .mutt/$f
 	done
+	copy_if_not_exist "$HOME/.mutt" "${0%/*}/mutt"
 fi
