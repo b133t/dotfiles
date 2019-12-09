@@ -130,8 +130,35 @@ _pwdtail() { #returns the last 2 fields of the working directory
 	pwd|awk -F/ '{nlast = NF -1;print $nlast"/"$NF}'
 }
 
-_relpath() {
+_relpath0() {
+	# path from $2 to $1
 	python -c 'import os.path, sys; print(os.path.relpath(sys.argv[1],sys.argv[2]))' "$1" "${2-$PWD}"
+}
+_relpath() {
+	# https://stackoverflow.com/questions/2564634/convert-absolute-path-into-relative-path-given-a-current-directory-using-bash/12498485#12498485
+	# opposite param order as _relpath0, ie path from $1 to $2
+	[ $# -ge 1 ] && [ $# -le 2 ] || return 1
+	current="${2:+"$1"}"
+	target="${2:-"$1"}"
+	[ "$target" != . ] || target=/
+	target="/${target##/}"
+	[ "$current" != . ] || current=/
+	current="${current:="/"}"
+	current="/${current##/}"
+	appendix="${target##/}"
+	relative=''
+	while appendix="${target#"$current"/}"
+		[ "$current" != '/' ] && [ "$appendix" = "$target" ]; do
+		if [ "$current" = "$appendix" ]; then
+			relative="${relative:-.}"
+			echo "${relative#/}"
+			return 0
+		fi
+		current="${current%/*}"
+		relative="$relative${relative:+/}.."
+	done
+	relative="$relative${relative:+${appendix:+/}}${appendix#/}"
+	echo "$relative"
 }
 
 # https://gist.github.com/laggardkernel/6cb4e1664574212b125fbfd115fe90a4
@@ -169,7 +196,6 @@ _prompt_command() {
 	IDENT=
 	BRANCH=
 	JOBS=
-	VENV=
 
 	local GREEN="\[\033[0;32m\]"
 	local CYAN="\[\033[0;36m\]"
@@ -201,11 +227,12 @@ _prompt_command() {
 	fi
 
 	if [[ "$PREVPWD" != "$PWD" ]]; then
+		VENV=
 		_virtualenv_auto_activate
 		if [[ -n $VIRTUAL_ENV ]]; then
 			local _h=$(dirname $VIRTUAL_ENV)
 			local _t=$(basename $VIRTUAL_ENV)
-			p="$(_relpath $_h $PWD)"
+			p="$(_relpath $PWD $_h)"
 			[ "$p" = "." ] && p="" || p="$p/"
 			p="$p$_t"
 			VENV="(\[$(tput sitm)\]$p\[$(tput ritm)\]) "
@@ -227,7 +254,7 @@ ${YELLOW}\w${BCYAN}${JOBS}${DEFAULT}\$ "
 }
 
 # either: 1) if [[ "$PREVPWD" != "$PWD" ]]; then .. (in _prompt_command)
-#     or: 2) append the command into CHPWD_COMMAND:
+#     or: 2) append the command into CHPWD_COMMAND, see _chpwd_hook() above
 #CHPWD_COMMAND="${CHPWD_COMMAND:+$CHPWD_COMMAND;}_some_bash_fn"
 
 PROMPT_COMMAND="_prompt_command; _chpwd_hook; ${PROMPT_COMMAND:+$PROMPT_COMMAND}"

@@ -24,6 +24,9 @@ if [ -d "$PERL_HOME" ]; then
 	PERL_MM_OPT="INSTALL_BASE=$PERL_HOME"; export PERL_MM_OPT;
 fi
 
+## bc
+export BC_ENV_ARGS=$HOME/.bcrc
+
 ## java tools
 PATH="$HOME/workspace/maven/bin:$HOME/workspace/ant/bin:$PATH"
 
