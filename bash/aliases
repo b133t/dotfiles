@@ -29,6 +29,10 @@ alias tagspy='ctags -R --fields=+l --languages=python --python-kinds=-iv $(pytho
 alias pip-latest="pip freeze --local | cut -d = -f 1 | xargs -n 1 pip search | grep -B2 'LATEST:'"
 alias compose='docker-compose'
 
+alias co='conda'
+alias co-a='conda activate'
+alias co-d='conda deactivate'
+
 ## mis-spellings
 alias maek='make'
 

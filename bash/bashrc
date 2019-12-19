@@ -44,7 +44,7 @@ elif [ -f "/etc/bash_completion.d/git-prompt" ]; then
 	source /etc/bash_completion.d/git-prompt
 fi
 
-# set the bash prompt
+# set the bash prompt (uses fzf, git from above)
 source ~/.bash/prompt
 
 # history (after setting bash prompt)
@@ -53,9 +53,6 @@ export HISTCONTROL=ignoredups:erasedups
 export HISTSIZE=100000
 export HISTFILESIZE=100000
 export HISTIGNORE="&:[ ]*:exit:ls:tree:bg:fg:history:clear:g pull"
-
-# tabcomplete these dirs from anywhere
-CDPATH=".:~"
 
 # autojump
 if [ -f "/etc/profile.d/autojump.sh" ]; then

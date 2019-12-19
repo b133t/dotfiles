@@ -1,6 +1,6 @@
 #!/bin/bash
 # based on https://gist.github.com/robbles/2211471
-# ⓥ ⎇ Ⴤ ⑂ 𐀀 ϟ ǂ ᚠ ‧ ● ⦿ ‣ ✔ ✘ ✖ ★ Ξ 〒↯ ≈ ⁖ 𝑣 ↵ 
+# ⓥ ⎇ Ⴤ ⑂ 𐀀 ϟ ǂ ᚠ ‧ ● ⦿ ‣ ✔ ✘ ✖ ★ Ξ 〒↯ ≈ ⁖ 𝑣 ↵
 
 # $1 is filename, echoes it going up dirs until $HOME but not including $HOME
 _upfind() {
@@ -15,8 +15,40 @@ _upfind() {
 	done
 }
 
+_conda_auto_activate() {
+	# activate eng-mdl vs deactivate (base)
+	#   $CONDA_DEFAULT_ENV=eng-mdl (base)
+	#   $CONDA_PREFIX=/Users/brandonlee/bin/anaconda3/envs/eng-mdl (/Users/brandonlee/bin/anaconda3)
+	#   $CONDA_PREFIX_1=/Users/brandonlee/bin/anaconda3 (unset)
+	#   $CONDA_PROMPT_MODIFIER='(eng-mdl) ' ('(base) ')
+	#   $CONDA_SHLVL=2 (1)
+
+	# _CONDA_ENV_ACT_PATH -- this is the path at which conda env was activated (dirname $_f)
+	#   if we go above this path, then deactivate
+
+	if [ -n "$CONDA_SHLVL" ] && [ $CONDA_SHLVL -gt 1 ] && [ -d "$_CONDA_ENV_ACT_PATH" ]; then
+		_base=$(basename $_CONDA_ENV_ACT_PATH)
+		if [[ ! $PWD/ =~ ^$_CONDA_ENV_ACT_PATH/ ]]; then
+			msg="Deactivating \`$CONDA_DEFAULT_ENV\`"
+			conda deactivate
+			unset _CONDA_ENV_ACT_PATH
+		fi
+	fi
+
+	unset _co_env
+	_f=$(_upfind .conda.env)
+	if [ -f "$_f" ]; then
+		read -r _co_env <"$_f"
+	fi
+	if [ "$_co_env" ] && [ "$_co_env" != "$CONDA_DEFAULT_ENV" ]; then
+		conda activate $_co_env
+		_CONDA_ENV_ACT_PATH=$(dirname $_f)
+	fi
+}
+
 _virtualenv_auto_activate() {
 	# Deactivate if venv dir no longer exists OR not prefix of pwd
+	VENV=
 	if [ "$VIRTUAL_ENV" ]; then
 		base=$(basename $VIRTUAL_ENV)
 		if [[ ! -d $VIRTUAL_ENV ]] || [[ ! $PWD/ =~ ^$(dirname $VIRTUAL_ENV)/ ]]; then
@@ -50,7 +82,15 @@ _virtualenv_auto_activate() {
 		msg="Activating virtualenv"
 		source $_VENV_PATH/bin/activate
 	fi
-	#[ "$msg" ] && echo "$(tput bold)$msg$(tput sgr0)"
+
+	if [[ -n $VIRTUAL_ENV ]]; then
+		local _h=$(dirname $VIRTUAL_ENV)
+		local _t=$(basename $VIRTUAL_ENV)
+		p="$(_relpath $PWD $_h)"
+		[ "$p" = "." ] && p="" || p="$p/"
+		p="$p$_t"
+		VENV="(\[$(tput sitm)\]$p\[$(tput ritm)\]) "
+	fi
 }
 
 _java_set_home() {
@@ -88,20 +128,20 @@ _java_auto_activate() {
 		fi
 	fi
 
-	local java12=$(_upfind .java12)
+	local java14=$(_upfind .java14)
 	local java11=$(_upfind .java11)
 	local java8=$(_upfind .java8)
 	# if both then down (longer) dir has precedence; if both are same dir then use later
-	if [[ -e $java12 && -e $java11 ]]; then
-		[[ $(dirname $java12) =~ ^$(dirname $java11) ]] && unset java11 || unset java12
+	if [[ -e $java14 && -e $java11 ]]; then
+		[[ $(dirname $java14) =~ ^$(dirname $java11) ]] && unset java11 || unset java14
 	fi
 	if [[ -e $java11 && -e $java8 ]]; then
 		[[ $(dirname $java11) =~ ^$(dirname $java8) ]] && unset java8 || unset java11
 	fi
-	if [[ -e $java12 && -e $java8 ]]; then
-		[[ $(dirname $java12) =~ ^$(dirname $java8) ]] && unset java8 || unset java12
+	if [[ -e $java14 && -e $java8 ]]; then
+		[[ $(dirname $java14) =~ ^$(dirname $java8) ]] && unset java8 || unset java14
 	fi
-	[[ $java12 ]] && local dir=$(dirname $java12) && local vers='12'
+	[[ $java14 ]] && local dir=$(dirname $java14) && local vers='14'
 	[[ $java11 ]] && local dir=$(dirname $java11) && local vers='11'
 	[[ $java8 ]]  && local dir=$(dirname $java8)  && local vers='1.8.0'
 
@@ -191,12 +231,6 @@ _prompt_command() {
 	history -c
 	history -r
 
-	# set for PS1 below
-	ERR=
-	IDENT=
-	BRANCH=
-	JOBS=
-
 	local GREEN="\[\033[0;32m\]"
 	local CYAN="\[\033[0;36m\]"
 	local BCYAN="\[\033[1;36m\]"
@@ -211,34 +245,42 @@ _prompt_command() {
 	local DEFAULT="\[\033[0;39m\]"
 
 	dots='●●●'
+
+	ERR=
 	if [ $code -ne 0 ]; then
 		ERR='${code}↵ '
 	fi
+
+	IDENT=
 	if [ "$SESSION_TYPE" == "remote/ssh" ]; then
 		IDENT='[\u@\h] '
 		#dots="${CYAN}⦿⦿⦿"
 		dots="${CYAN}${dots}"
 	fi
+
+	BRANCH=
 	if [ "\$(type -t __git_ps1)" ]; then
 		BRANCH="\$(__git_ps1 '↯\[$(tput sitm)\]%s\[$(tput ritm)\] ')"
 	fi
+
+	JOBS=
 	if [ "$(jobs -p)" ]; then
 		JOBS="[\j]"
 	fi
 
+	## ALL pwd change functions in this block
 	if [[ "$PREVPWD" != "$PWD" ]]; then
-		VENV=
-		_virtualenv_auto_activate
-		if [[ -n $VIRTUAL_ENV ]]; then
-			local _h=$(dirname $VIRTUAL_ENV)
-			local _t=$(basename $VIRTUAL_ENV)
-			p="$(_relpath $PWD $_h)"
-			[ "$p" = "." ] && p="" || p="$p/"
-			p="$p$_t"
-			VENV="(\[$(tput sitm)\]$p\[$(tput ritm)\]) "
-		fi
+		_virtualenv_auto_activate # clears/sets VENV
+		_conda_auto_activate
 
 		_java_auto_activate
+	fi
+	# conda can be activated w/o changing dirs (conda [de]activate ..)
+	VENV=
+	if [ -n "$CONDA_SHLVL" ] && [ $CONDA_SHLVL -gt 1 ]; then
+		p=${CONDA_DEFAULT_ENV}
+		#VENV="(\[$(tput sitm)\]$p\[$(tput ritm)\]) "
+		VENV="($p) "
 	fi
 
 	# set the titlebar to the last 2 fields of pwd
