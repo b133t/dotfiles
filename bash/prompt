@@ -19,7 +19,7 @@ _conda_auto_activate() {
 	# _CONDA_ENV_ACT_PATH -- this is the path at which conda env was activated (dirname $_f)
 	#   if we go above this path, then deactivate
 
-	if [ -n "$CONDA_SHLVL" ] && [ $CONDA_SHLVL -gt 1 ] && [ -d "$_CONDA_ENV_ACT_PATH" ]; then
+	if [ -d "$_CONDA_ENV_ACT_PATH" ]; then
 		_base=$(basename $_CONDA_ENV_ACT_PATH)
 		if [[ ! $PWD/ =~ ^$_CONDA_ENV_ACT_PATH/ ]]; then
 			msg="Deactivating \`$CONDA_DEFAULT_ENV\`"
@@ -98,7 +98,7 @@ _java_set_home() {
 		[ -d "$dir" ] && JAVA_HOME=$dir
 	fi
 	if [[ -d $JAVA_HOME ]]; then
-		msg="Setting JAVA_HOME=${JAVA_HOME}"
+		msg="JAVA_HOME=${JAVA_HOME}"
 		export JAVA_HOME
 	else
 		unset JAVA_HOME
@@ -112,7 +112,7 @@ _java_auto_activate() {
 	if [[  -n $JSET_PATH && -n $JAVA_HOME ]]; then
 		local common_parent=$(printf "%s\n%s\n" "$JSET_PATH" "$PWD" | sed -e 'N;s/^\(.*\).*\n\1.*$/\1/')
 		if [[  ! $common_parent =~ ^$JSET_PATH ]]; then
-			msg="Unsetting JAVA_HOME"
+			msg="JAVA_HOME=(unset)"
 			unset JAVA_HOME && unset JSET_PATH
 			if [[ -n $JSET_OLD_PATH ]]; then
 				export PATH=$JSET_OLD_PATH
@@ -262,16 +262,14 @@ _prompt_command() {
 
 	## ALL pwd change functions in this block (esp good for slower commands)
 	if [[ "$PREVPWD" != "$PWD" ]]; then
+		_java_auto_activate
+
 		VENV=
 		_virtualenv_auto_activate # sets VENV
 		_conda_auto_activate
-
-		_java_auto_activate
 	fi
 	# conda can be activated w/o changing dirs (conda [de]activate ..)
-	if [ -n "$CONDA_SHLVL" ] && [ $CONDA_SHLVL -gt 1 ]; then
-		VENV="(${CONDA_DEFAULT_ENV}) "
-	fi
+	unset VENV && [ "$CONDA_DEFAULT_ENV" ] && VENV="(${CONDA_DEFAULT_ENV}) "
 
 	# set the titlebar to the last 2 fields of pwd
 	local _u=''
