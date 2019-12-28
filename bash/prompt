@@ -212,7 +212,7 @@ _chpwd_hook() {
 _prompt_command() {
 	code=$?
 
-	# SESSION_TYPE set in .bashrc
+	# SESSION_TYPE is set in .bashrc
 
 	# bash stores history in mem and writes it at exit but we want shared history b/ all shells:
 	# -a Append the 'new' history lines to the history file. These are history lines entered since
