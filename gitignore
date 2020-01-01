@@ -1,4 +1,5 @@
 *~[0-9]*
+.conda.env
 .dict.utf-8.add
 .dict.utf-8.add.spl
 .DS_Store
@@ -6,5 +7,6 @@
 .java11
 .java14
 .metaflow
+.venv
 pg.sql
 tags

@@ -68,6 +68,8 @@ fi
 	export TMUX_SYM='🔒' || \
 	export TMUX_SYM='⚡'
 
+export TERM_ITALICS=true
+
 # --- local
 DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
 if [ -f "$DIR/bashrc.local" ]; then

@@ -2,11 +2,11 @@
   "title": "Firefox Mappings",
   "rules": [
     {
-      "description": "Firefox L-Cmd-open-bracket to Ctl-PgUp",
+      "description": "Firefox L-Cmd-Left-Arrow to Ctl-PgUp",
       "manipulators": [
         {
           "from": {
-            "key_code": "open_bracket",
+            "key_code": "left_arrow",
             "modifiers": {
               "mandatory": [
                 "left_command"
@@ -37,11 +37,11 @@
       ]
     },
     {
-      "description": "Firefox L-Cmd-close-bracket to Ctl-PgDn",
+      "description": "Firefox L-Cmd-Right-Arrow to Ctl-PgDn",
       "manipulators": [
         {
           "from": {
-            "key_code": "close_bracket",
+            "key_code": "right_arrow",
             "modifiers": {
               "mandatory": [
                 "left_command"
