@@ -15,9 +15,21 @@ export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30
 [ -f "$HOME/.bash/aliases" ] && source "$HOME/.bash/aliases"
 
 # bash-completion
-[[ $PS1 && -f /etc/bash_completion ]] && . /etc/bash_completion
-[[ $PS1 && -f /usr/local/etc/bash_completion ]] && . /usr/local/etc/bash_completion
-[[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && . /usr/share/bash-completion/bash_completion
+for f in /etc/bash_completion \
+		/usr/local/etc/bash_completion \
+		/usr/share/bash-completion/bash_completion \
+		/usr/local/share/bash-completion/bash_completion; do
+	[ -f "$f" ] && source $f
+done
+for d in /etc/bash_completion.d \
+		/usr/local/etc/bash_completion.d; do
+	if [ -d "$d" ]; then
+		for f in $(\ls $d/); do
+			source $d/$f
+		done
+	fi
+done
+
 bind "set completion-ignore-case on"
 bind "set completion-map-case on"
 bind "set show-all-if-ambiguous on"

@@ -14,6 +14,13 @@ alias g='git'
 alias gd='git diff'
 alias gst='git status'
 
+alias d='docker'
+alias compose='docker-compose'
+
+alias ag='ag --color-path "1;36" --color-match "1;31" --color-line-number "0"'
+# blue+bold in solarized palette is gray
+alias rg='rg --smart-case --colors path:fg:blue --colors path:style:bold --colors line:none'
+
 if [ "$(uname -s)" = "Darwin" ]; then
 	alias brewup='brew update && brew upgrade && brew cleanup -s'
 	alias venv2=$HOME/Library/Python/2.7/bin/virtualenv
@@ -21,22 +28,18 @@ else
 	alias ls='ls -F --color=always'
 fi
 
-alias ag='ag --color-path "1;36" --color-match "1;31" --color-line-number "0"'
-# blue+bold in solarized palette is gray
-alias rg='rg --smart-case --colors path:fg:blue --colors path:style:bold --colors line:none'
+alias uenc='python -c "import sys,urllib;print urllib.quote(sys.stdin.read().strip())"'
+alias udec='python -c "import sys,urllib;print urllib.unquote(sys.stdin.read().strip())"'
 
 alias tagspy='ctags -R --fields=+l --languages=python --python-kinds=-iv $(python -c "import os, sys; print('"'"' '"'"'.join('"'"'{}'"'"'.format(d) for d in sys.path if os.path.isdir(d)))")'
 alias pip-latest="pip freeze --local | cut -d = -f 1 | xargs -n 1 pip search | grep -B2 'LATEST:'"
-alias compose='docker-compose'
 
-alias co='conda'
-
-## mis-spellings
+# common typos
 alias maek='make'
 
 
 # --- local
-DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
-if [ -f "$DIR/aliases.local" ]; then
-	source "$DIR/aliases.local"
+_bash_script_dir="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
+if [ -f "$_bash_script_dir/aliases.local" ]; then
+	source "$_bash_script_dir/aliases.local"
 fi
