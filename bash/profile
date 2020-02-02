@@ -27,8 +27,5 @@ fi
 ## bc
 export BC_ENV_ARGS=$HOME/.bcrc
 
-## java tools
-PATH="$HOME/workspace/maven/bin:$HOME/workspace/ant/bin:$PATH"
-
 PATH=~/bin:~/.local/bin:$PATH
 export PATH

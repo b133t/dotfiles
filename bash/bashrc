@@ -29,6 +29,7 @@ for d in /etc/bash_completion.d \
 		done
 	fi
 done
+[ -x "$(command -v pipenv)" ] && eval "$(pipenv --completion)"
 
 bind "set completion-ignore-case on"
 bind "set completion-map-case on"

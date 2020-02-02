@@ -16,9 +16,8 @@ _upfind() {
 }
 
 _conda_auto_activate() {
-	# _CONDA_ENV_ACT_PATH -- this is the path at which conda env was activated (dirname $_f)
-	#   if we go above this path, then deactivate
-
+	# _CONDA_ENV_ACT_PATH -- this is the path at which conda env was activated,
+	#  if we go above this path, then deactivate
 	if [ -d "$_CONDA_ENV_ACT_PATH" ]; then
 		_base=$(basename $_CONDA_ENV_ACT_PATH)
 		if [[ ! $PWD/ =~ ^$_CONDA_ENV_ACT_PATH/ ]]; then
@@ -28,15 +27,53 @@ _conda_auto_activate() {
 		fi
 	fi
 
-	unset _co_env
+	local _env
 	_f=$(_upfind .conda.env)
 	if [ -f "$_f" ]; then
-		read -r _co_env <"$_f"
+		read -r _env <"$_f"
 	fi
-	if [ "$_co_env" ] && [ "$_co_env" != "$CONDA_DEFAULT_ENV" ]; then
-		conda activate $_co_env
+	if [ "$_env" ] && [ "$_env" != "$CONDA_DEFAULT_ENV" ]; then
+		conda activate $_env
 		_CONDA_ENV_ACT_PATH=$(dirname $_f)
 	fi
+}
+
+_pipenv_auto_activate() {
+	unset msg
+
+	# _PIPENV_ACT_PATH -- this is the path at which pipenv was activated,
+	#  if we go above this path, then deactivate
+	if [ -d "$_PIPENV_ACT_PATH" ]; then
+		_base=$(basename $_PIPENV_ACT_PATH)
+		if [[ ! $PWD/ =~ ^$_PIPENV_ACT_PATH/ ]]; then
+			msg="Deactivating \`$VIRTUAL_ENV\`"
+			deactivate
+			unset _PIPENV_ACT_PATH
+		fi
+	fi
+
+	local _f=$(_upfind Pipfile.lock)
+	if [ -f "$_f" ]; then
+		pushd $(dirname $_f) >/dev/null
+		local _env=$(PIPENV_VERBOSITY=-1 pipenv --venv)
+		[ -d "$_env" ] && _PIPENV_ACT_PATH=$(pwd)
+		popd >/dev/null
+
+		# Check to see if already activated to avoid redundant activating
+		if [[ -n $_PIPENV_ACT_PATH && $VIRTUAL_ENV != $_env ]]; then
+			VIRTUAL_ENV_DISABLE_PROMPT=1 # we'll do the prompt ourselveds
+			msg="Activating virtualenv \`$_env\`"
+			source $_env/bin/activate
+		fi
+	fi
+
+
+	unset VENV
+	if [[ -n $VIRTUAL_ENV ]]; then
+		VENV="(\[$(tput sitm)\]$(basename $_env)\[$(tput ritm)\]) " # italicize
+	fi
+
+	[ "$msg" ] && echo "$(tput bold)$msg$(tput sgr0)"
 }
 
 _virtualenv_auto_activate() {
@@ -264,12 +301,12 @@ _prompt_command() {
 	if [[ "$PREVPWD" != "$PWD" ]]; then
 		_java_auto_activate
 
-		VENV=
-		_virtualenv_auto_activate # sets VENV
-		_conda_auto_activate
+		#_conda_auto_activate
+		#_virtualenv_auto_activate # (un)sets VENV
+		_pipenv_auto_activate # (un)sets VENV
 	fi
 	# conda can be activated w/o changing dirs (conda [de]activate ..)
-	unset VENV && [ "$CONDA_DEFAULT_ENV" ] && VENV="(${CONDA_DEFAULT_ENV}) "
+	#unset VENV && [ "$CONDA_DEFAULT_ENV" ] && VENV="(${CONDA_DEFAULT_ENV}) "
 
 	# set the titlebar to the last 2 fields of pwd
 	local _u=''

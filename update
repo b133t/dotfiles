@@ -46,6 +46,7 @@ diffit gitignore .gitignore
 diffit tmux.conf .tmux.conf
 diffit vimrc .vimrc
 diffit psqlrc .psqlrc
+diffit bcrc .bcrc
 diffit gemrc .gemrc
 ## ctags.d
 mkdir -p $HOME/.ctags.d

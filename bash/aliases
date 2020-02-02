@@ -8,6 +8,7 @@ alias k2='kill -HUP %2 && fg'
 alias k3='kill -HUP %3 && fg'
 
 alias ls='ls -F'
+alias rmd='rm -Ir'
 alias trim='cut -c-$(tput cols)'
 
 alias g='git'
@@ -37,6 +38,9 @@ alias pip-latest="pip freeze --local | cut -d = -f 1 | xargs -n 1 pip search | g
 # common typos
 alias maek='make'
 
+# java
+alias mvn='~/workspace/maven/bin/mvn'
+alias ant='~/workspace/apache-ant-1.10.7/bin/ant'
 
 # --- local
 _bash_script_dir="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
