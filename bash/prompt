@@ -2,240 +2,17 @@
 # based on https://gist.github.com/robbles/2211471
 # ⓥ ⎇ Ⴤ ⑂ 𐀀 ϟ ǂ ᚠ ‧ ● ⦿ ‣ ✔ ✘ ✖ ★ Ξ 〒↯ ≈ ⁖ 𝑣 ↵
 
-# $1 is filename, echoes it going up dirs until $HOME but not including $HOME
-_upfind() {
-	dir=`pwd`
-	while [[ $dir =~ ^$HOME/ ]]; do
-		p=`find "$dir" -maxdepth 1 -name $1`
-		if [ ! -z $p ]; then
-			echo "$p"
-			return
-		fi
-		dir=`dirname "$dir"`
-	done
-}
-
-_conda_auto_activate() {
-	# _CONDA_ENV_ACT_PATH -- this is the path at which conda env was activated,
-	#  if we go above this path, then deactivate
-	if [ -d "$_CONDA_ENV_ACT_PATH" ]; then
-		_base=$(basename $_CONDA_ENV_ACT_PATH)
-		if [[ ! $PWD/ =~ ^$_CONDA_ENV_ACT_PATH/ ]]; then
-			msg="Deactivating \`$CONDA_DEFAULT_ENV\`"
-			conda deactivate
-			unset _CONDA_ENV_ACT_PATH
-		fi
-	fi
-
-	local _env
-	_f=$(_upfind .conda.env)
-	if [ -f "$_f" ]; then
-		read -r _env <"$_f"
-	fi
-	if [ "$_env" ] && [ "$_env" != "$CONDA_DEFAULT_ENV" ]; then
-		conda activate $_env
-		_CONDA_ENV_ACT_PATH=$(dirname $_f)
-	fi
-}
-
-_pipenv_auto_activate() {
-	unset msg
-
-	# _PIPENV_ACT_PATH -- this is the path at which pipenv was activated,
-	#  if we go above this path, then deactivate
-	if [ -d "$_PIPENV_ACT_PATH" ]; then
-		_base=$(basename $_PIPENV_ACT_PATH)
-		if [[ ! $PWD/ =~ ^$_PIPENV_ACT_PATH/ ]]; then
-			msg="Deactivating \`$VIRTUAL_ENV\`"
-			deactivate
-			unset _PIPENV_ACT_PATH
-		fi
-	fi
-
-	local _f=$(_upfind Pipfile.lock)
-	if [ -f "$_f" ]; then
-		pushd $(dirname $_f) >/dev/null
-		local _env=$(PIPENV_VERBOSITY=-1 pipenv --venv)
-		[ -d "$_env" ] && _PIPENV_ACT_PATH=$(pwd)
-		popd >/dev/null
-
-		# Check to see if already activated to avoid redundant activating
-		if [[ -n $_PIPENV_ACT_PATH && $VIRTUAL_ENV != $_env ]]; then
-			VIRTUAL_ENV_DISABLE_PROMPT=1 # we'll do the prompt ourselveds
-			msg="Activating virtualenv \`$_env\`"
-			source $_env/bin/activate
-		fi
-	fi
-
-
-	unset VENV
-	if [[ -n $VIRTUAL_ENV ]]; then
-		VENV="(\[$(tput sitm)\]$(basename $_env)\[$(tput ritm)\]) " # italicize
-	fi
-
-	[ "$msg" ] && echo "$(tput bold)$msg$(tput sgr0)"
-}
-
-_virtualenv_auto_activate() {
-	# Deactivate if venv dir no longer exists OR not prefix of pwd
-	if [ "$VIRTUAL_ENV" ]; then
-		base=$(basename $VIRTUAL_ENV)
-		if [[ ! -d $VIRTUAL_ENV ]] || [[ ! $PWD/ =~ ^$(dirname $VIRTUAL_ENV)/ ]]; then
-			msg="Deactivating virtualenv"
-			deactivate
-			unset _VENV_PATH
-		fi
-	fi
-
-	# Check for symlink pointing to virtualenv
-	if [ -L ".venv" ]; then
-		# could be absolute or relative link, but the pwd is valid since we are in chpwd
-		dir=`dirname $(readlink .venv)`
-		base=`basename $(readlink .venv)`
-		[ "$dir" = "." ] \
-			&& _VENV_PATH="$(pwd -P)/$base" \
-			|| _VENV_PATH="$(cd $dir >/dev/null && pwd -P)/$base"
-
-	elif [ -d "venv" ]; then
-		_VENV_PATH=$(pwd -P)/venv
-
-	else
-		_d=$(_upfind venv)
-		[ -n "$_d" ] && _VENV_PATH=$_d
-	fi
-
-	# Check to see if already activated to avoid redundant activating
-	if [[ -n $_VENV_PATH && $VIRTUAL_ENV != $_VENV_PATH ]]; then
-		_VENV_NAME=$(basename `pwd`)
-		VIRTUAL_ENV_DISABLE_PROMPT=1
-		msg="Activating virtualenv"
-		source $_VENV_PATH/bin/activate
-	fi
-
-	VENV=
-	if [[ -n $VIRTUAL_ENV ]]; then
-		local _h=$(dirname $VIRTUAL_ENV)
-		local _t=$(basename $VIRTUAL_ENV)
-		p="$(_relpath $PWD $_h)"
-		[ "$p" = "." ] && p="" || p="$p/"
-		p="$p$_t"
-		VENV="(\[$(tput sitm)\]$p\[$(tput ritm)\]) " # italicize
-	fi
-}
-
-_java_set_home() {
-	local vers=$1
-	if [ "$(uname -s)" = "Darwin" ]; then
-		[[ "$vers" != "1.8.0" ]] && vers="-$vers"
-		local dir=`ls -dt /Library/Java/JavaVirtualMachines/jdk${vers}* | head -1`
-		dir=${dir}Contents/Home
-		[ -d "$dir" ] && JAVA_HOME=$dir
-	elif [ "$(uname -s)" = "Linux" ]; then
-		local dir="/usr/lib/jvm/java-${vers}-openjdk"
-		[ -d "$dir" ] && JAVA_HOME=$dir
-	fi
-	if [[ -d $JAVA_HOME ]]; then
-		msg="JAVA_HOME=${JAVA_HOME}"
-		export JAVA_HOME
-	else
-		unset JAVA_HOME
-		echo "Error: JAVA_HOME could not be set"
-	fi
-}
-_java_auto_activate() {
-	unset msg
-
-	# unset if PWD (common parent) is parent of JSET_PATH
-	if [[  -n $JSET_PATH && -n $JAVA_HOME ]]; then
-		local common_parent=$(printf "%s\n%s\n" "$JSET_PATH" "$PWD" | sed -e 'N;s/^\(.*\).*\n\1.*$/\1/')
-		if [[  ! $common_parent =~ ^$JSET_PATH ]]; then
-			msg="JAVA_HOME=(unset)"
-			unset JAVA_HOME && unset JSET_PATH
-			if [[ -n $JSET_OLD_PATH ]]; then
-				export PATH=$JSET_OLD_PATH
-				unset JSET_OLD_PATH
-			fi
-		fi
-	fi
-
-	local java14=$(_upfind .java14)
-	local java11=$(_upfind .java11)
-	local java8=$(_upfind .java8)
-	# if both then down (longer) dir has precedence; if both are same dir then use later
-	if [[ -e $java14 && -e $java11 ]]; then
-		[[ $(dirname $java14) =~ ^$(dirname $java11) ]] && unset java11 || unset java14
-	fi
-	if [[ -e $java11 && -e $java8 ]]; then
-		[[ $(dirname $java11) =~ ^$(dirname $java8) ]] && unset java8 || unset java11
-	fi
-	if [[ -e $java14 && -e $java8 ]]; then
-		[[ $(dirname $java14) =~ ^$(dirname $java8) ]] && unset java8 || unset java14
-	fi
-	[[ $java14 ]] && local dir=$(dirname $java14) && local vers='14'
-	[[ $java11 ]] && local dir=$(dirname $java11) && local vers='11'
-	[[ $java8 ]]  && local dir=$(dirname $java8)  && local vers='1.8.0'
-
-	# if $dir is newer (JSET_PATH is parent of $dir) then unset
-	if [[ $dir =~ ^$JSET_PATH/ ]]; then
-		unset JAVA_HOME && unset JSET_PATH
-	fi
-
-	if [[ -n $dir && -z "$JAVA_HOME" ]]; then
-		JSET_PATH=$dir
-		_java_set_home $vers
-
-		if [ "$(uname -s)" = "Linux" ]; then
-			if [[ -n $JSET_OLD_PATH ]]; then
-				PATH=$JSET_OLD_PATH
-			fi
-			JSET_OLD_PATH=$PATH
-			export PATH=$JAVA_HOME/bin:$PATH
-		fi
-	fi
-
-	[ "$msg" ] && echo "$(tput bold)$msg$(tput sgr0)"
-}
-
 _pwdtail() { #returns the last 2 fields of the working directory
 	pwd|awk -F/ '{nlast = NF -1;print $nlast"/"$NF}'
 }
 
-_relpath0() {
-	# path from $2 to $1
-	python -c 'import os.path, sys; print(os.path.relpath(sys.argv[1],sys.argv[2]))' "$1" "${2-$PWD}"
-}
-_relpath() {
-	# https://stackoverflow.com/questions/2564634/convert-absolute-path-into-relative-path-given-a-current-directory-using-bash/12498485#12498485
-	# opposite param order as _relpath0, ie path from $1 to $2
-	[ $# -ge 1 ] && [ $# -le 2 ] || return 1
-	current="${2:+"$1"}"
-	target="${2:-"$1"}"
-	[ "$target" != . ] || target=/
-	target="/${target##/}"
-	[ "$current" != . ] || current=/
-	current="${current:="/"}"
-	current="/${current##/}"
-	appendix="${target##/}"
-	relative=''
-	while appendix="${target#"$current"/}"
-		[ "$current" != '/' ] && [ "$appendix" = "$target" ]; do
-		if [ "$current" = "$appendix" ]; then
-			relative="${relative:-.}"
-			echo "${relative#/}"
-			return 0
-		fi
-		current="${current%/*}"
-		relative="$relative${relative:+/}.."
-	done
-	relative="$relative${relative:+${appendix:+/}}${appendix#/}"
-	echo "$relative"
-}
+source $(dirname $BASH_SOURCE[0])/auto_activate.sh
 
 # https://gist.github.com/laggardkernel/6cb4e1664574212b125fbfd115fe90a4
 _chpwd_hook() {
   local f
   # run commands in CHPWD_COMMAND variable on dir change
-  if [[ "$PREVPWD" != "$PWD" ]]; then
+  if [ "$PREVPWD" != "$PWD" ]; then
 	local IFS=$';'
 	for f in $CHPWD_COMMAND; do
 		"$f"
@@ -297,30 +74,26 @@ _prompt_command() {
 		JOBS="[\j]"
 	fi
 
-	## ALL pwd change functions in this block (esp good for slower commands)
-	if [[ "$PREVPWD" != "$PWD" ]]; then
+	## ALL pwd change functions in this block (good for slower commands)
+	if [ "$PREVPWD" != "$PWD" ]; then
 		_java_auto_activate
-
-		#_conda_auto_activate
-		#_virtualenv_auto_activate # (un)sets VENV
+		# using pipenv here, see auto_activate.sh script for conda and virtualenv scripts
 		_pipenv_auto_activate # (un)sets VENV
 	fi
-	# conda can be activated w/o changing dirs (conda [de]activate ..)
-	#unset VENV && [ "$CONDA_DEFAULT_ENV" ] && VENV="(${CONDA_DEFAULT_ENV}) "
 
 	# set the titlebar to the last 2 fields of pwd
-	local _u=''
+	local u=''
 	if [ "$SESSION_TYPE" == "remote/ssh" ]; then
-		_u="${USER}@"
+		u="${USER}@"
 	fi
-	echo -ne "\033]0;[${_u}$(hostname -s)] ${PWD##*/}\007"
+	echo -ne "\033]0;[${u}$(hostname -s)] ${PWD##*/}\007"
 
 	export PS1="${RED}${ERR}${BRIGHT}${dots} \
 ${CYAN}${IDENT}${GREEN}${BRANCH}${BLUE}${VENV}\
 ${YELLOW}\w${BCYAN}${JOBS}${DEFAULT}\$ "
 }
 
-# either: 1) if [[ "$PREVPWD" != "$PWD" ]]; then .. (in _prompt_command)
+# either: 1) if [ "$PREVPWD" != "$PWD" ]; then .. (in _prompt_command)
 #     or: 2) append the command into CHPWD_COMMAND, see _chpwd_hook() above
 #CHPWD_COMMAND="${CHPWD_COMMAND:+$CHPWD_COMMAND;}_some_bash_fn"
 

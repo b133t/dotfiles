@@ -18,6 +18,13 @@ alias gst='git status'
 alias d='docker'
 alias compose='docker-compose'
 
+alias kc='kubectl'
+alias km='minikube'
+alias kcgp='kubectl get pods'
+alias kcgpw='kubectl get pods -o wide'
+alias kcgs='kubectl get services'
+alias kcgsw='kubectl get services -o wide'
+
 alias ag='ag --color-path "1;36" --color-match "1;31" --color-line-number "0"'
 # blue+bold in solarized palette is gray
 alias rg='rg --smart-case --colors path:fg:blue --colors path:style:bold --colors line:none'
