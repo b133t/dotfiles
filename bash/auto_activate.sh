@@ -76,6 +76,7 @@ _java_auto_activate() {
 	[ "$msg" ] && echo "$(tput bold)$msg$(tput sgr0)"
 }
 
+# NOTE: this is not compatible w `pipenv shell` but I don't care bc I don't use it
 _pipenv_auto_activate() {
 	unset msg
 
@@ -93,7 +94,7 @@ _pipenv_auto_activate() {
 	local _f=$(upfind Pipfile.lock)
 	if [ -f "$_f" ]; then
 		local _env=$(cd $(dirname $_f) && PIPENV_VERBOSITY=-1 pipenv --venv)
-		[ -d "$_env" ] && _PIPENV_ACT_PATH=$(pwd)
+		[ -d "$_env" ] && _PIPENV_ACT_PATH=$(dirname $_f)
 
 		# Check to see if already activated to avoid redundant activating
 		if [ -n "$_PIPENV_ACT_PATH" ] && [ "$VIRTUAL_ENV" != "$_env" ]; then
