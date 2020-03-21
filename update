@@ -47,6 +47,7 @@ diffit tmux.conf .tmux.conf
 diffit vimrc .vimrc
 diffit psqlrc .psqlrc
 diffit bcrc .bcrc
+diffit tigrc .tigrc
 diffit gemrc .gemrc
 ## ctags.d
 mkdir -p $HOME/.ctags.d

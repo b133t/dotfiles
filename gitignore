@@ -8,5 +8,6 @@
 .java14
 .metaflow
 .venv
+*-dump.sql
 pg.sql
 tags
