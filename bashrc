@@ -7,6 +7,7 @@ esac
 # fix unfortunate WSL defaults
 umask 002
 
+# set SESSION_TYPE to `remote/ssh` if coming through ssh
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	export SESSION_TYPE=remote/ssh
 else

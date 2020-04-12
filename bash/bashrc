@@ -14,21 +14,29 @@ export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30
 
 [ -f "$HOME/.bash/aliases" ] && source "$HOME/.bash/aliases"
 
-# bash-completion
+## git bash completion, before general bash_completion b/c tig completion script
+[ "$(uname -s)" = "Darwin" ] && XCODE_PRE=$(xcode-select -p)
+for f in $XCODE_PRE/usr/share/git-core/git-completion.bash \
+		$XCODE_PRE/usr/share/git-core/git-prompt.sh \
+		"/usr/share/git-core/contrib/completion/git-prompt.sh" \
+		"/etc/bash_completion.d/git-prompt"; do
+	[ -f "$f" ] && source $f
+done
+# bash-completion, calls installed script in .../bash_completion.d/
 for f in /etc/bash_completion \
 		/usr/local/etc/bash_completion \
 		/usr/share/bash-completion/bash_completion \
 		/usr/local/share/bash-completion/bash_completion; do
 	[ -f "$f" ] && source $f
 done
-for d in /etc/bash_completion.d \
-		/usr/local/etc/bash_completion.d; do
-	if [ -d "$d" ]; then
-		for f in $(\ls $d/); do
-			source $d/$f
-		done
-	fi
-done
+#for d in /etc/bash_completion.d \
+#		/usr/local/etc/bash_completion.d; do
+#	if [ -d "$d" ]; then
+#		for f in $(\ls $d/); do
+#			source $d/$f
+#		done
+#	fi
+#done
 [ -x "$(command -v pipenv)" ] && eval "$(pipenv --completion)"
 
 bind "set completion-ignore-case on"
@@ -46,16 +54,6 @@ type "fdfind" &>/dev/null && fd=fdfind || fd=fd
 export FZF_DEFAULT_COMMAND="$fd -t f"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="$fd -t d"
-
-## git
-if [ "$(uname -s)" = "Darwin" ]; then
-	source `xcode-select -p`/usr/share/git-core/git-completion.bash
-	source `xcode-select -p`/usr/share/git-core/git-prompt.sh
-elif [ -f "/usr/share/git-core/contrib/completion/git-prompt.sh" ]; then
-	source /usr/share/git-core/contrib/completion/git-prompt.sh
-elif [ -f "/etc/bash_completion.d/git-prompt" ]; then
-	source /etc/bash_completion.d/git-prompt
-fi
 
 # set the bash prompt (uses fzf, git from above)
 source ~/.bash/prompt

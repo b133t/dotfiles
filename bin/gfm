@@ -31,6 +31,6 @@ $(cat $css)
 	}
 </style>
 <body class="markdown-body">
-$(cmark-gfm -e autolink -e table $*)
+$(LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH cmark-gfm -e autolink -e table $*)
 </body></html>
 EOF
