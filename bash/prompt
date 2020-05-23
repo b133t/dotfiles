@@ -1,6 +1,6 @@
 #!/bin/bash
 # based on https://gist.github.com/robbles/2211471
-# ⓥ ⎇ Ⴤ ⑂ 𐀀 ϟ ǂ ᚠ ‧ ● ⦿ ‣ £ § ¥ ✔ ✘ ✖ ★ Ξ 〒↯ ≈ ⁖ 𝑣 ↵
+# ⓥ ⎇ ⑂ ǂ ‧ ● ⦿ ‣ § Ϟ ϟ ↯ ✔ ✘ ✖ ★ Ξ ≈ ⁖ 𝑣 ↵
 
 _pwdtail() { #returns the last 2 fields of the working directory
 	pwd|awk -F/ '{nlast = NF -1;print $nlast"/"$NF}'

@@ -28,6 +28,8 @@ alias udec='python -c "import sys,urllib;print urllib.unquote(sys.stdin.read().s
 alias tagspy='ctags -R --fields=+l --languages=python --python-kinds=-iv $(python -c "import os, sys; print('"'"' '"'"'.join('"'"'{}'"'"'.format(d) for d in sys.path if os.path.isdir(d)))")'
 alias pip-latest="pip freeze --local | cut -d = -f 1 | xargs -n 1 pip search | grep -B2 'LATEST:'"
 
+alias top10='/bin/ps -eo pcpu,pid,user,args | sort -k 1 -r | head -10'
+
 # kube/docker
 
 alias d='docker'

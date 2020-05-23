@@ -1,7 +1,7 @@
 # various auto-activate scripts
 
-source $(dirname $BASH_SOURCE[0])/upfind.sh
-source $(dirname $BASH_SOURCE[0])/relpath.sh
+source $(dirname $BASH_SOURCE)/upfind.sh
+source $(dirname $BASH_SOURCE)/relpath.sh
 
 _java_set_home() {
 	local vers=$1
@@ -107,8 +107,8 @@ _pipenv_auto_activate() {
 	unset VENV
 	if [ -n "$VIRTUAL_ENV" ] && [ -n "$_PIPENV_ACT_PATH" ]; then
 		# Display rel path to pipenv root dir in prompt
-		local t=$(basename $_PIPENV_ACT_PATH)
-		local p="$(relpath $PWD $_PIPENV_ACT_PATH)"
+		local t="$(basename $_PIPENV_ACT_PATH)"
+		local p="$(relpath "$PWD" "$_PIPENV_ACT_PATH")"
 		#[ "$p" = "." ] && p="" || p="$p/"
 		p="$t" # just use name, use "$t:$p" if entire (rel) path is desired
 		VENV="(\[$(tput sitm)\]$p\[$(tput ritm)\]) " # italicize

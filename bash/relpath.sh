@@ -12,12 +12,15 @@ relpath() {
 	while [[ "${target#$common_part}" == "${target}" ]]; do
 		# no match, means that candidate common part is not correct
 		# go up one level (reduce common part)
-		common_part="$(dirname $common_part)"
+		common_part=$(dirname "$common_part")
 		# and record that we went back, with correct / handling
-		[[ -z $result ]] && result=".." || result="../$result"
+		if [ "$common_part" = "/" ] || [ "$common_part" = "." ]; then
+			break # error, are not related dirs
+		fi
+		[ -z "$result" ] && result=".." || result="../$result"
 	done
 
-	if [[ $common_part == "/" ]]; then
+	if [ "$common_part" == "/" ] || [ "$common_part" == "." ]; then
 		# special case for root (no common path)
 		result="$result/"
 	fi

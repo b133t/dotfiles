@@ -63,7 +63,7 @@ shopt -s histappend
 export HISTCONTROL=ignoredups:erasedups
 export HISTSIZE=100000
 export HISTFILESIZE=100000
-export HISTIGNORE="&:[ ]*:exit:ls:tree:bg:fg:history:clear:g pull"
+export HISTIGNORE="&:[ ]*:exit:ls:tree:bg:fg:k1:history:clear:g pull:gst"
 
 # autojump
 if [ -f "/etc/profile.d/autojump.sh" ]; then
