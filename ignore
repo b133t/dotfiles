@@ -8,6 +8,8 @@
 bower_components
 build
 classes
+ctags.SAFE
+deps
 diff*
 node_modules
 tags
@@ -21,4 +23,5 @@ venv
 *.map
 *.min.*
 *.out
+*-dump.sql
 *.pyc

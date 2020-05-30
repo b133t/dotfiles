@@ -1,5 +1,4 @@
-export GPG_TTY=$(tty)
-export EDITOR=vim
+##
 
 if [ "$(uname -s)" = "Darwin" ]; then
 	export CLICOLOR=1
@@ -74,15 +73,9 @@ elif [ -f "/usr/share/autojump/autojump.sh" ]; then
 	. /usr/share/autojump/autojump.sh
 fi
 
-## tmux
+# tmux
 [ "$SESSION_TYPE" = "remote/ssh" ] && \
 	export TMUX_SYM='🔒' || \
 	export TMUX_SYM='⚡'
 
-export TERM_ITALICS=true
-
-# --- local
-DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
-if [ -f "$DIR/bashrc.local" ]; then
-	source "$DIR/bashrc.local"
-fi
+## --- local

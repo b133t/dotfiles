@@ -49,8 +49,4 @@ alias maek='make'
 alias mvn='~/workspace/java/maven/bin/mvn'
 alias ant='~/workspace/java/ant/bin/ant'
 
-# --- local
-_bash_script_dir="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
-if [ -f "$_bash_script_dir/aliases.local" ]; then
-	source "$_bash_script_dir/aliases.local"
-fi
+## --- local
