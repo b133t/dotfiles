@@ -5,6 +5,7 @@
 .hg/
 .settings/
 .svn/
+BAK/
 bower_components
 build
 classes

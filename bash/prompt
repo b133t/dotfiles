@@ -77,8 +77,8 @@ _prompt_command() {
 	## ALL pwd change functions in this block (good for slower commands)
 	if [ "$PREVPWD" != "$PWD" ]; then
 		_java_auto_activate
-		# using pipenv here, see auto_activate.sh script for conda and virtualenv scripts
-		_pipenv_auto_activate # (un)sets VENV
+		# see auto_activate.sh script for various virtualenv scripts
+		_virtualenv_auto_activate # (un)sets VENV
 	fi
 
 	# set the titlebar to the last 2 fields of pwd

@@ -164,11 +164,11 @@ _virtualenv_auto_activate() {
 			&& _VENV_PATH="$(pwd -P)/$base" \
 			|| _VENV_PATH="$(cd $dir >/dev/null && pwd -P)/$base"
 
-	elif [ -d "venv" ]; then
-		_VENV_PATH=$(pwd -P)/venv
+	elif [ -d ".venv" ]; then
+		_VENV_PATH=$(pwd -P)/.venv
 
 	else
-		_d=$(upfind venv)
+		_d=$(upfind .venv)
 		[ -n "$_d" ] && _VENV_PATH=$_d
 	fi
 
@@ -185,8 +185,7 @@ _virtualenv_auto_activate() {
 		local _h=$(dirname $VIRTUAL_ENV)
 		local _t=$(basename $VIRTUAL_ENV)
 		p="$(relpath $PWD $_h)"
-		[ "$p" = "." ] && p="" || p="$p/"
-		p="$p$_t"
+		[ "$p" = "" ] && p="."
 		VENV="(\[$(tput sitm)\]$p\[$(tput ritm)\]) " # italicize
 	fi
 }

@@ -45,6 +45,9 @@ alias kcgsw='kubectl get services -o wide'
 # common typos
 alias maek='make'
 
+# python
+alias po='poetry'
+
 # java
 alias mvn='~/workspace/java/maven/bin/mvn'
 alias ant='~/workspace/java/ant/bin/ant'
