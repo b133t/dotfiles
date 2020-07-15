@@ -20,20 +20,23 @@ alias ag='ag --color-path "1;36" --color-match "1;31" --color-line-number "0"'
 # blue+bold in solarized palette is gray
 alias rg='rg --smart-case --colors path:fg:blue --colors path:style:bold --colors line:none'
 
+# https://www.commandlinefu.com/commands/view/12043/remove-color-special-escape-ansi-codes-from-text-with-sed
+alias stripansi='sed "s,\x1B\[[0-9;]*[a-zA-Z],,g"'
+alias top10='/bin/ps -eo pcpu,pid,user,args | sort -k 1 -r | head -10'
 alias brewup='brew update && brew upgrade && brew cleanup -s'
 
 alias uenc='python -c "import sys,urllib;print urllib.quote(sys.stdin.read().strip())"'
 alias udec='python -c "import sys,urllib;print urllib.unquote(sys.stdin.read().strip())"'
 
+alias po='poetry'
 alias tagspy='ctags -R --fields=+l --languages=python --python-kinds=-iv $(python -c "import os, sys; print('"'"' '"'"'.join('"'"'{}'"'"'.format(d) for d in sys.path if os.path.isdir(d)))")'
-alias pip-latest="pip freeze --local | cut -d = -f 1 | xargs -n 1 pip search | grep -B2 'LATEST:'"
-
-alias top10='/bin/ps -eo pcpu,pid,user,args | sort -k 1 -r | head -10'
 
 # kube/docker
 
 alias d='docker'
 alias compose='docker-compose'
+
+alias gc='gcloud'
 
 alias kc='kubectl'
 alias km='minikube'
@@ -44,9 +47,6 @@ alias kcgsw='kubectl get services -o wide'
 
 # common typos
 alias maek='make'
-
-# python
-alias po='poetry'
 
 # java
 alias mvn='~/workspace/java/maven/bin/mvn'
