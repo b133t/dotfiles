@@ -7,8 +7,6 @@ alias k1='kill -HUP %1 && fg'
 alias k2='kill -HUP %2 && fg'
 alias k3='kill -HUP %3 && fg'
 
-alias ls='ls -F --color=always'
-[ "$(uname -s)" = "Darwin" ] && alias ls='ls -F'
 alias rm-all='rm -Ir'
 alias trim='cut -c-$(tput cols)'
 

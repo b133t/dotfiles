@@ -1,4 +1,7 @@
-##
+## called from ~/.bashrc
+
+export TERM_ITALICS=true
+export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'
 
 if [ "$(uname -s)" = "Darwin" ]; then
 	export CLICOLOR=1
@@ -8,10 +11,6 @@ if [ "$(uname -s)" = "Darwin" ]; then
 	# http://drmuey.com/?do=page&id=15
 	export COPYFILE_DISABLE=true
 fi
-
-export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'
-
-[ -f "$HOME/.bash/aliases" ] && source "$HOME/.bash/aliases"
 
 ## git bash completion, before general bash_completion b/c tig completion script
 [ "$(uname -s)" = "Darwin" ] && XCODE_PRE=$(xcode-select -p)
@@ -45,8 +44,6 @@ bind "set mark-symlinked-directories on"
 
 # fzf
 [ -f ~/.fzf.bash ] && . ~/.fzf.bash
-#export FZF_DEFAULT_COMMAND='ag -g ""'
-#export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow'
 ## https://mike.place/2017/fzf-fd/
 ## ubuntu installs as "fdfind"
 type "fdfind" &>/dev/null && fd=fdfind || fd=fd
@@ -57,9 +54,10 @@ export FZF_ALT_C_COMMAND="$fd -t d"
 # set the bash prompt (uses fzf, git from above)
 source ~/.bash/prompt
 
-# history (after setting bash prompt)
+# History (after setting bash prompt)
+# See bash(1) for more options
 shopt -s histappend
-export HISTCONTROL=ignoredups:erasedups
+export HISTCONTROL=ignorespace:ignoredups:erasedups
 export HISTSIZE=100000
 export HISTFILESIZE=100000
 export HISTIGNORE="&:[ ]*:exit:ls:tree:bg:fg:k1:history:clear:g pull:gst"
@@ -77,5 +75,7 @@ fi
 [ "$SESSION_TYPE" = "remote/ssh" ] && \
 	export TMUX_SYM='🔒' || \
 	export TMUX_SYM='⚡'
+
+[ -f "$HOME/.bash/aliases" ] && source "$HOME/.bash/aliases"
 
 ## --- local

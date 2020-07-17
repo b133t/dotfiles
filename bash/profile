@@ -1,9 +1,9 @@
 #!/bin/bash
 if [ "$(uname -s)" = "Darwin" ]; then
-	ruby_bin=$HOME/.gem/ruby/2.3.0/bin
+	ruby_bin=$HOME/.gem/ruby/2.6.0/bin
 	PATH=$ruby_bin:$PATH
 
-	py_bin=$HOME/Library/Python/3.7/bin
+	py_bin=$HOME/Library/Python/3.8/bin
 	[ -d "$py_bin" ] && PATH=$py_bin:$PATH
 fi
 
@@ -24,8 +24,6 @@ if [ -d "$PERL_HOME" ]; then
 	PERL_MM_OPT="INSTALL_BASE=$PERL_HOME"; export PERL_MM_OPT;
 fi
 
-## bc
 export BC_ENV_ARGS=$HOME/.bcrc
 
-PATH=~/bin:~/.local/bin:$PATH
-export PATH
+## --- local

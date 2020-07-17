@@ -24,7 +24,7 @@ diffit() {
 			diff $dst $src
 		}
 	else
-		diff -q $dst $src
+		diff -q $dst $src >/dev/null || echo "Files differ: $dst $src"
 	fi
 }
 ## copy src file if doesn't exist in dst directory
@@ -56,6 +56,7 @@ for f in `ls ${0%/*}/ctags.d`; do
 done
 copy_if_not_exist $HOME/.ctags.d ${0%/*}/ctags.d
 ## bash
+diffit profile .profile
 diffit bash_profile .bash_profile
 diffit bashrc .bashrc
 diffit inputrc .inputrc
