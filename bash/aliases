@@ -7,47 +7,31 @@ alias k1='kill -HUP %1 && fg'
 alias k2='kill -HUP %2 && fg'
 alias k3='kill -HUP %3 && fg'
 
-alias rm-all='rm -Ir'
 alias trim='cut -c-$(tput cols)'
 
-alias g='git'
-alias gd='git diff'
-alias gst='git status'
-
-alias ag='ag --color-path "1;36" --color-match "1;31" --color-line-number "0"'
 # blue+bold in solarized palette is gray
-alias rg='rg --smart-case --colors path:fg:blue --colors path:style:bold --colors line:none'
+#alias rg='rg --smart-case --colors path:fg:blue --colors path:style:bold --colors line:none'
+#alias ag='ag --color-path "1;36" --color-match "1;31" --color-line-number "0"'
+alias rg='rg --smart-case'
 
+alias g='git'
+alias d='docker'
+alias dc='docker-compose'
+alias gc='gcloud'
+alias kc='kubectl'
+alias po='poetry'
+
+# -- commands not in path
+alias mvn='~/workspace/java/maven/bin/mvn'
+alias ant='~/workspace/java/ant/bin/ant'
+
+# -- long commands
 # https://www.commandlinefu.com/commands/view/12043/remove-color-special-escape-ansi-codes-from-text-with-sed
 alias stripansi='sed "s,\x1B\[[0-9;]*[a-zA-Z],,g"'
 alias top10='/bin/ps -eo pcpu,pid,user,args | sort -k 1 -r | head -10'
 alias brewup='brew update && brew upgrade && brew cleanup -s'
-
+alias tagspy='ctags -R --fields=+l --languages=python --python-kinds=-iv $(python -c "import os, sys; print('"'"' '"'"'.join('"'"'{}'"'"'.format(d) for d in sys.path if os.path.isdir(d)))")'
 alias uenc='python -c "import sys,urllib;print urllib.quote(sys.stdin.read().strip())"'
 alias udec='python -c "import sys,urllib;print urllib.unquote(sys.stdin.read().strip())"'
-
-alias po='poetry'
-alias tagspy='ctags -R --fields=+l --languages=python --python-kinds=-iv $(python -c "import os, sys; print('"'"' '"'"'.join('"'"'{}'"'"'.format(d) for d in sys.path if os.path.isdir(d)))")'
-
-# kube/docker
-
-alias d='docker'
-alias compose='docker-compose'
-
-alias gc='gcloud'
-
-alias kc='kubectl'
-alias km='minikube'
-alias kcgp='kubectl get pods'
-alias kcgpw='kubectl get pods -o wide'
-alias kcgs='kubectl get services'
-alias kcgsw='kubectl get services -o wide'
-
-# common typos
-alias maek='make'
-
-# java
-alias mvn='~/workspace/java/maven/bin/mvn'
-alias ant='~/workspace/java/ant/bin/ant'
 
 ## --- local
