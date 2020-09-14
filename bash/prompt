@@ -97,4 +97,4 @@ ${YELLOW}\w${BCYAN}${JOBS}${DEFAULT}\$ "
 #     or: 2) append the command into CHPWD_COMMAND, see _chpwd_hook() above
 #CHPWD_COMMAND="${CHPWD_COMMAND:+$CHPWD_COMMAND;}_some_bash_fn"
 
-PROMPT_COMMAND="_prompt_command; _chpwd_hook; ${PROMPT_COMMAND:+$PROMPT_COMMAND}"
+PROMPT_COMMAND="_prompt_command; _chpwd_hook"
