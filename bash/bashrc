@@ -1,7 +1,7 @@
 ## called from ~/.bashrc
 
 export TERM_ITALICS=true
-export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'
+#export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'
 
 if [ "$(uname -s)" = "Darwin" ]; then
 	export CLICOLOR=1
@@ -59,7 +59,7 @@ source ~/.bash/prompt
 shopt -s histappend
 export HISTCONTROL=ignorespace:ignoredups:erasedups
 export HISTSIZE=100000
-export HISTFILESIZE=100000
+export HISTFILESIZE=200000
 export HISTIGNORE="&:[ ]*:exit:ls:tree:bg:fg:k1:history:clear:g pull:gst"
 
 # autojump

@@ -1,6 +1,4 @@
 $include /etc/inputrc
-
-# arrow up/down
 "\e[A": history-search-backward
 "\e[B": history-search-forward
 
