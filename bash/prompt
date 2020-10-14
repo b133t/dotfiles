@@ -24,7 +24,7 @@ _chpwd_hook() {
 }
 
 _prompt_command() {
-	code=$?
+	local code="$?"
 
 	# SESSION_TYPE is set in .bashrc
 
@@ -55,7 +55,7 @@ _prompt_command() {
 
 	ERR=
 	if [ $code -ne 0 ]; then
-		ERR='${code}↵ '
+		ERR="${code}↵ "
 	fi
 
 	IDENT=

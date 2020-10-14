@@ -8,7 +8,7 @@ _java_set_home() {
 	if [ "$(uname -s)" = "Darwin" ]; then
 		[[ "$vers" != "1.8.0" ]] && vers="-$vers"
 		local dir=`ls -dt /Library/Java/JavaVirtualMachines/jdk${vers}* | head -1`
-		dir=${dir}Contents/Home
+		dir=${dir}/Contents/Home
 		[ -d "$dir" ] && JAVA_HOME=$dir
 	elif [ "$(uname -s)" = "Linux" ]; then
 		local dir="/usr/lib/jvm/java-${vers}-openjdk"
