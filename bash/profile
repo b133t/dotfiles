@@ -6,9 +6,6 @@ fi
 if [ "$(uname -s)" = "Darwin" ]; then
 	ruby_bin=$HOME/.gem/ruby/2.6.0/bin
 	PATH=$ruby_bin:$PATH
-
-	py_bin=$HOME/Library/Python/3.8/bin
-	[ -d "$py_bin" ] && PATH=$py_bin:$PATH
 fi
 
 ## http://stackoverflow.com/questions/10081293/install-npm-into-home-directory-with-distribution-nodejs-package-ubuntu
