@@ -39,6 +39,21 @@ copy_if_not_exist() {
 	done
 }
 
+## dependencies
+[ -d "complete-alias" ] && cd complete-alias && git pull && cd ..
+[ ! -d "complete-alias" ] && git clone https://github.com/cykerway/complete-alias.git
+[ ! -L "bash/complete_alias" ] && ln -s ../complete-alias/complete_alias ./bash/complete_alias
+
+## bash
+diffit profile .profile
+diffit bash_profile .bash_profile
+diffit bashrc .bashrc
+diffit bash_completion .bash_completion
+diffit inputrc .inputrc
+mkdir -p $HOME/.bash
+for f in `ls ${0%/*}/bash`; do
+	diffit bash/$f .bash/$f
+done
 ## config
 diffit ignore .ignore
 diffit gitconfig .gitconfig
@@ -55,15 +70,6 @@ for f in `ls ${0%/*}/ctags.d`; do
 	diffit ctags.d/$f .ctags.d/$f
 done
 copy_if_not_exist $HOME/.ctags.d ${0%/*}/ctags.d
-## bash
-diffit profile .profile
-diffit bash_profile .bash_profile
-diffit bashrc .bashrc
-diffit inputrc .inputrc
-mkdir -p $HOME/.bash
-for f in `ls ${0%/*}/bash`; do
-	diffit bash/$f .bash/$f
-done
 ## karabiner
 if [[ $(uname -s) == "Darwin" ]]; then
 	d=karabiner/assets/complex_modifications

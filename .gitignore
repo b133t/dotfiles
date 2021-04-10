@@ -1,3 +1,5 @@
 *.crt
 *.ovpn
+/complete-alias/
+/bash/complete_alias
 pgpass

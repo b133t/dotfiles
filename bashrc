@@ -124,6 +124,7 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+hash terraform 2>/dev/null && complete -C terraform terraform
 
 . $HOME/.bash/bashrc
 

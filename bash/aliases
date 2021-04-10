@@ -23,6 +23,7 @@ alias g='git'
 alias gc='gcloud'
 alias kc='kubectl'
 alias po='poetry'
+alias tf='terraform'
 
 # -- commands not in path
 alias mvn='~/workspace/java/maven/bin/mvn'

@@ -76,6 +76,7 @@ fi
 	export TMUX_SYM='🔒' || \
 	export TMUX_SYM='⚡'
 
-[ -f "$HOME/.bash/aliases" ] && source "$HOME/.bash/aliases"
+source "$HOME/.bash/aliases"
+source "$HOME/.bash/complete_alias"
 
 ## --- local
