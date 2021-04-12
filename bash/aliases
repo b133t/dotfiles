@@ -72,6 +72,6 @@ function $function_name {
 
 complete -F __start_kubectl kc
 __git_complete g __git_main
-
+complete -C terraform terraform
 
 ## --- local

@@ -30,9 +30,9 @@ done
 
 [ -x "$(command -v pipenv)" ] && eval "$(pipenv --completion)"
 
-hash terraform 2>/dev/null && complete -C terraform terraform
 for f in `ls ~/.bash/completions`; do
-	source ~/.bash/completions/$f
+	[ -f "/etc/bash_completions.d/$f" ] || source ~/.bash/completions/$f
+	[ -f "/usr/local/etc/bash_completions.d/$f" ] || source ~/.bash/completions/$f
 done
 
 # fzf

@@ -21,9 +21,7 @@ if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
-## ---
+# ---
 if [ -f "$HOME/.bash/profile" ]; then
 	. $HOME/.bash/profile
 fi
-
-## --- local
