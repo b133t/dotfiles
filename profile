@@ -4,6 +4,9 @@
 # see /usr/share/doc/bash/examples/startup-files for examples.
 # the files are located in the bash-doc package.
 
+# This file must be compatible with any /bin/sh – this includes bash, dash, ksh
+# and whatever else a distro might choose to use
+
 # the default umask is set in /etc/profile; for setting the umask
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
@@ -18,11 +21,9 @@ if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
-## --- add local, etc to ~/.bash/profile
-# (See .bash_profile for more info)
-# ~/.profile must be compatible with any /bin/sh – this includes bash, dash, ksh, whatever else
-# a distro might choose to use
-
+## ---
 if [ -f "$HOME/.bash/profile" ]; then
 	. $HOME/.bash/profile
 fi
+
+## --- local

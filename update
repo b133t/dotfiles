@@ -60,8 +60,8 @@ diffit bash_profile .bash_profile
 diffit bashrc .bashrc
 diffit inputrc .inputrc
 mkdir -p $HOME/.bash/completions
-for path in `find bash -type f,l`; do
-	diffit $path .$path
+for path in `find bash`; do
+	[ ! -d "$path" ] && diffit $path .$path
 done
 
 ## config
