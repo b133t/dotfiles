@@ -25,8 +25,6 @@ alias kc='kubectl'
 alias po='poetry'
 alias tf='terraform'
 
-alias ktx='kubectx'
-
 # -- commands not in path
 alias mvn='~/workspace/java/maven/bin/mvn'
 alias ant='~/workspace/java/ant/bin/ant'
@@ -39,5 +37,41 @@ alias brewup='brew update && brew upgrade && brew cleanup -s'
 alias tagspy='ctags -R --fields=+l --languages=python --python-kinds=-iv $(python -c "import os, sys; print('"'"' '"'"'.join('"'"'{}'"'"'.format(d) for d in sys.path if os.path.isdir(d)))")'
 alias uenc='python -c "import sys,urllib;print urllib.quote(sys.stdin.read().strip())"'
 alias udec='python -c "import sys,urllib;print urllib.unquote(sys.stdin.read().strip())"'
+
+
+## -- complete alias
+
+# https://ubuntuforums.org/showthread.php?t=733397
+# Author : Ole J
+# Date   : 23.03.2008
+# License: Whatever
+# Wraps a completion function
+# make-completion-wrapper <actual completion function> <name of new func.>
+#                         <command name> <list supplied arguments>
+# eg.
+#   alias agi='apt-get install'
+#   make-completion-wrapper _apt_get _apt_get_install apt-get install
+# defines a function called _apt_get_install (that's $2) that will complete
+# the 'agi' alias. (complete -F _apt_get_install agi)
+function make-completion-wrapper () {
+	local function_name="$2"
+	local arg_count=$(($#-3))
+	local comp_function_name="$1"
+	shift 2
+	local function="
+function $function_name {
+	((COMP_CWORD+=$arg_count))
+	COMP_WORDS=( "$@" \${COMP_WORDS[@]:1} )
+	"$comp_function_name"
+	return 0
+}"
+	eval "$function"
+	echo $function_name
+	echo "$function"
+}
+
+complete -F __start_kubectl kc
+__git_complete g __git_main
+
 
 ## --- local

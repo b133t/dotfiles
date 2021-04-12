@@ -1,7 +1,0 @@
-complete -F _complete_alias d
-complete -F _complete_alias dc
-complete -F _complete_alias g
-complete -F _complete_alias gc
-complete -F _complete_alias kc
-complete -F _complete_alias po
-complete -F _complete_alias tf

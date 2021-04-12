@@ -1,9 +1,7 @@
 *.crt
 *.ovpn
-/complete-alias/
 /kubectx/
 bash/bash_completion.d/
-bash/complete_alias
 bin/kubectx
 bin/kubens
 pgpass

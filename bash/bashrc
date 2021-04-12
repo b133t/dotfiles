@@ -69,6 +69,5 @@ fi
 	export TMUX_SYM='⚡'
 
 source "$HOME/.bash/aliases"
-source "$HOME/.bash/complete_alias"
 
 ## --- local

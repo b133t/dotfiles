@@ -42,10 +42,6 @@ copy_if_not_exist() {
 
 ## external
 mkdir -p bash/bash_completion.d
-# complete-alias
-[ -d "complete-alias" ] && cd complete-alias && git pull && cd ..
-[ ! -d "complete-alias" ] && git clone https://github.com/cykerway/complete-alias.git
-[ ! -L "bash/complete_alias"  ] && ln -s ../complete-alias/complete_alias ./bash/complete_alias
 # kubectx, kubens
 [ -d "kubectx" ] && cd kubectx && git pull && cd ..
 [ ! -d "kubectx" ] && git clone https://github.com/ahmetb/kubectx.git
@@ -62,15 +58,8 @@ hash kubectl && kubectl completion bash >bash/bash_completion.d/kubectl.bash
 diffit profile .profile
 diffit bash_profile .bash_profile
 diffit bashrc .bashrc
-diffit bash_completion .bash_completion
 diffit inputrc .inputrc
 mkdir -p $HOME/.bash/bash_completion.d
-#for f in `ls ${0%/*}/bash`; do
-#	[ ! -d "bash/$f" ] && diffit bash/$f .bash/$f
-#done
-#for f in `ls ${0%/*}/bash/bash_completion.d`; do
-#	diffit bash/bash_completion.d/$f .bash/bash_completion.d/$f
-#done
 for path in `find bash -type f,l`; do
 	diffit $path .$path
 done
