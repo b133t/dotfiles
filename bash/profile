@@ -1,8 +1,4 @@
 #!/bin/bash
-if [ -d "/usr/local/sbin" ]; then
-  PATH=$PATH:/usr/local/sbin
-fi
-
 if [ "$(uname -s)" = "Darwin" ]; then
 	ruby_bin=$HOME/.gem/ruby/2.6.0/bin
 	PATH=$ruby_bin:$PATH

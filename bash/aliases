@@ -25,6 +25,8 @@ alias kc='kubectl'
 alias po='poetry'
 alias tf='terraform'
 
+alias ktx='kubectx'
+
 # -- commands not in path
 alias mvn='~/workspace/java/maven/bin/mvn'
 alias ant='~/workspace/java/ant/bin/ant'

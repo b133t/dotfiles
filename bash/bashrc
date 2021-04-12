@@ -12,6 +12,8 @@ if [ "$(uname -s)" = "Darwin" ]; then
 	export COPYFILE_DISABLE=true
 fi
 
+## completion
+
 ## git bash completion, before general bash_completion b/c tig completion script
 [ "$(uname -s)" = "Darwin" ] && XCODE_PRE=$(xcode-select -p)
 for f in $XCODE_PRE/usr/share/git-core/git-completion.bash \
@@ -20,27 +22,17 @@ for f in $XCODE_PRE/usr/share/git-core/git-completion.bash \
 		"/etc/bash_completion.d/git-prompt"; do
 	[ -f "$f" ] && source $f
 done
-# bash-completion, calls installed script in .../bash_completion.d/
-for f in /etc/bash_completion \
-		/usr/local/etc/bash_completion \
-		/usr/share/bash-completion/bash_completion \
-		/usr/local/share/bash-completion/bash_completion; do
+# bash-completion, which calls installed scripts in .../bash_completion.d/
+for f in /etc/bash_completion /usr/share/bash-completion/bash_completion; do
 	[ -f "$f" ] && source $f
 done
-#for d in /etc/bash_completion.d \
-#		/usr/local/etc/bash_completion.d; do
-#	if [ -d "$d" ]; then
-#		for f in $(\ls $d/); do
-#			source $d/$f
-#		done
-#	fi
-#done
+
 [ -x "$(command -v pipenv)" ] && eval "$(pipenv --completion)"
 
-bind "set completion-ignore-case on"
-bind "set completion-map-case on"
-bind "set show-all-if-ambiguous on"
-bind "set mark-symlinked-directories on"
+hash terraform 2>/dev/null && complete -C terraform terraform
+for f in `ls ~/.bash/bash_completion.d`; do
+	source ~/.bash/bash_completion.d/$f
+done
 
 # fzf
 [ -f ~/.fzf.bash ] && . ~/.fzf.bash
