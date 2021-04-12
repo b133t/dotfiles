@@ -41,25 +41,25 @@ copy_if_not_exist() {
 
 
 ## external
-mkdir -p bash/bash_completion.d
+mkdir -p bash/completions
 # kubectx, kubens
 [ -d "kubectx" ] && cd kubectx && git pull && cd ..
 [ ! -d "kubectx" ] && git clone https://github.com/ahmetb/kubectx.git
 [ ! -L "bin/kubectx"  ] && ln -s ../kubectx/kubectx ./bin/kubectx
 [ ! -L "bin/kubens"  ] && ln -s ../kubectx/kubens ./bin/kubens
-[ -L "bash/bash_completion.d/kubectx.bash" ] || \
-	ln -s ../../kubectx/completion/kubectx.bash ./bash/bash_completion.d/kubectx.bash
-[ -L "bash/bash_completion.d/kubens.bash" ] || \
-	ln -s ../../kubectx/completion/kubens.bash ./bash/bash_completion.d/kubens.bash
+[ -L "bash/completions/kubectx.bash" ] || \
+	ln -s ../../kubectx/completion/kubectx.bash ./bash/completions/kubectx.bash
+[ -L "bash/completions/kubens.bash" ] || \
+	ln -s ../../kubectx/completion/kubens.bash ./bash/completions/kubens.bash
 # kubctl
-hash kubectl && kubectl completion bash >bash/bash_completion.d/kubectl.bash
+hash kubectl && kubectl completion bash >bash/completions/kubectl.bash
 
 ## bash
 diffit profile .profile
 diffit bash_profile .bash_profile
 diffit bashrc .bashrc
 diffit inputrc .inputrc
-mkdir -p $HOME/.bash/bash_completion.d
+mkdir -p $HOME/.bash/completions
 for path in `find bash -type f,l`; do
 	diffit $path .$path
 done
