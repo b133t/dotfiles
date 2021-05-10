@@ -41,7 +41,7 @@ copy_if_not_exist() {
 
 
 ## external
-mkdir -p bash/completions
+mkdir -p bash/completions $HOME/.bash/completions
 # kubectx, kubens
 [ -d "kubectx" ] && cd kubectx && git pull && cd ..
 [ ! -d "kubectx" ] && git clone https://github.com/ahmetb/kubectx.git
@@ -51,15 +51,16 @@ mkdir -p bash/completions
 	ln -s ../../kubectx/completion/kubectx.bash ./bash/completions/kubectx.bash
 [ -L "bash/completions/kubens.bash" ] || \
 	ln -s ../../kubectx/completion/kubens.bash ./bash/completions/kubens.bash
-# kubctl
-hash kubectl && kubectl completion bash >bash/completions/kubectl.bash
+# commands
+hash kubectl && kubectl completion bash >~/.bash/completions/kubectl.bash
+hash helm && helm completion bash >~/.bash/completions/helm.bash
+hash poetry && poetry completions bash >~/.bash/completions/poetry.bash
 
 ## bash
 diffit profile .profile
 diffit bash_profile .bash_profile
 diffit bashrc .bashrc
 diffit inputrc .inputrc
-mkdir -p $HOME/.bash/completions
 for path in `find bash`; do
 	[ ! -d "$path" ] && diffit $path .$path
 done

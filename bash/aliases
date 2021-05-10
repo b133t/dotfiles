@@ -21,6 +21,7 @@ alias dk='docker stack'
 alias ds='docker service'
 alias g='git'
 alias gc='gcloud'
+alias gsu='gsutil'
 alias kc='kubectl'
 alias po='poetry'
 alias tf='terraform'
@@ -42,18 +43,8 @@ alias udec='python -c "import sys,urllib;print urllib.unquote(sys.stdin.read().s
 ## -- complete alias
 
 # https://ubuntuforums.org/showthread.php?t=733397
-# Author : Ole J
 # Date   : 23.03.2008
-# License: Whatever
-# Wraps a completion function
-# make-completion-wrapper <actual completion function> <name of new func.>
-#                         <command name> <list supplied arguments>
-# eg.
-#   alias agi='apt-get install'
-#   make-completion-wrapper _apt_get _apt_get_install apt-get install
-# defines a function called _apt_get_install (that's $2) that will complete
-# the 'agi' alias. (complete -F _apt_get_install agi)
-function make-completion-wrapper () {
+make_completion_wrapper() {
 	local function_name="$2"
 	local arg_count=$(($#-3))
 	local comp_function_name="$1"
@@ -66,12 +57,18 @@ function $function_name {
 	return 0
 }"
 	eval "$function"
-	echo $function_name
-	echo "$function"
+	#echo "$function"
 }
 
-complete -F __start_kubectl kc
 __git_complete g __git_main
+
+complete -o default -F __start_kubectl kc
+make_completion_wrapper  "_python_argcomplete gcloud" _gcloud gcloud
+complete -o nospace -F _gcloud gc
 complete -C terraform terraform
+complete -C terraform tf
+
+complete -F _docker d
+complete -o default -F _poetry_6fc10033adc3a873_complete po
 
 ## --- local
