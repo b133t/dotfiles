@@ -1,10 +1,3 @@
-* app store - update
-
-* safari extensions
-  lastpass
-  badger privacy
-  ublock origin
-
 * ssh-keygen (or copy)
 
 * install xcode:
@@ -18,14 +11,11 @@
   bash-completion@2
   cmark-gfm
   fd
-  jq --HEAD
-  postgres
-  python (py3)
-  redis
+  jq
   ripgrep
   rsync
   tree
-  universal-ctags --HEAD
+  universal-ctags
 
 * bin/dotfiles
   $ cd bin
@@ -33,48 +23,16 @@
   $ cd dotfiles && ./update
 
 * vim
-  install macvim: (via MacVim.dmg) - don't use brew since it'll install py2
+  install macvim: (via MacVim.dmg)
     http://macvim-dev.github.io/macvim/
   $ mkdir ~/.tmp ~/.tmp/undo ~/.tmp/swap ~/.tmp/backup
   $ cd ~/bin \
     && ln -s /Applications/MacVim.app/Contents/bin/mvim vim \
     && ln -s /Applications/MacVim.app/Contents/bin/mvim gvim
-  $ git clone https://brandon133@github.com/brandon133/vim.git .vim \
+  $ git clone https://brandon133@github.com/brandon733/vim.git .vim \
     && cd .vim
     && ./update
 
-  My standard font is SF Mono, but plex is a beautiful font (esp on browser)
-  - SF Mono Font is included in xcode
-  - Install IBM Plex Mono font at https://github.com/IBM/plex
+  My standard font is SF Mono, but JetBrains Mono is pretty good too
 
 * java.oracle.com
-
-* eclipse
-  install latest (for Mac, install dmg version to ~/bin)
-  $ cd ~/.vim \
-    && git clone git://github.com/ervandew/eclim.git \
-    && vim user.properties < "eclipse.home=${user.home}/bin/Eclipse.app/Contents/Eclipse\n vim.files=${user.home}/.vim" \
-    && ant
-
-
-* other apps
-
-  ●●● ~$ brew list
-  ant                     harfbuzz                pyenv
-  autoconf                icu4c                   python
-  autojump                jq                      readline
-  automake                lame                    redis
-  awscli                  libffi                  ripgrep
-  bash                    libpng                  sqlite
-  bash-completion@2       libtool                 the_silver_searcher
-  cairo                   maven                   tidy-html5
-  cmark-gfm               nmap                    tig
-  fd                      node@8                  tree
-  ffmpeg                  oniguruma               universal-ctags
-  fontconfig              openssl                 wakeonlan
-  freetype                pango                   x264
-  fribidi                 pcre                    xvid
-  gdbm                    pcre2                   xz
-  gettext                 pixman                  youtube-dl
-  glib                    pkg-config
-  graphite2               postgresql

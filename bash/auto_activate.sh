@@ -38,20 +38,20 @@ _java_auto_activate() {
 		fi
 	fi
 
-	local java14=$(upfind .java14)
+	local java17=$(upfind .java17)
 	local java11=$(upfind .java11)
 	local java8=$(upfind .java8)
 	# if both then deeper (longer) dir has precedence; if both are same dir then use later
-	if [[ -e $java14 && -e $java11 ]]; then
-		[[ $(dirname $java14) =~ ^$(dirname $java11) ]] && unset java11 || unset java14
+	if [[ -e $java17 && -e $java11 ]]; then
+		[[ $(dirname $java17) =~ ^$(dirname $java11) ]] && unset java11 || unset java17
 	fi
 	if [[ -e $java11 && -e $java8 ]]; then
 		[[ $(dirname $java11) =~ ^$(dirname $java8) ]] && unset java8 || unset java11
 	fi
-	if [[ -e $java14 && -e $java8 ]]; then
-		[[ $(dirname $java14) =~ ^$(dirname $java8) ]] && unset java8 || unset java14
+	if [[ -e $java17 && -e $java8 ]]; then
+		[[ $(dirname $java17) =~ ^$(dirname $java8) ]] && unset java8 || unset java17
 	fi
-	[[ $java14 ]] && local dir=$(dirname $java14) && local vers='14'
+	[[ $java17 ]] && local dir=$(dirname $java17) && local vers='17'
 	[[ $java11 ]] && local dir=$(dirname $java11) && local vers='11'
 	[[ $java8 ]]  && local dir=$(dirname $java8)  && local vers='1.8.0'
 

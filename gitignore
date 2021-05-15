@@ -1,13 +1,11 @@
 *~[0-9]*
-.conda.env
 .dict.utf-8.add
 .dict.utf-8.add.spl
 .DS_Store
 .java8
 .java11
-.java14
+.java17
 .metaflow
 .venv
-*-dump.sql
-pg.sql
+Thumbs.db
 tags

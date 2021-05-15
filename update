@@ -124,3 +124,9 @@ if [[ $opt_mutt ]]; then
 	done
 	copy_if_not_exist "$HOME/.mutt" "${0%/*}/mutt"
 fi
+
+## to update poetry:
+# poetry self update
+## to update nvm:
+# nvm install node --latest-npm --reinstall-packages-from=node
+# nvm install --lts --latest-npm --reinstall-packages-from='lts/*'

@@ -2,23 +2,18 @@
 
 These are _my_ dot files. Your mileage may vary.
 
-Environments where these scripts are used: Mac OSX and Linux (Fedora, CentOS, AWS, Ubuntu),
+Environments where these scripts are used: Mac OSX and Linux (Fedora, CentOS, Ubuntu),
 Windows WSL.
 
-I use bash.
-
-I don't use any special extended font sets (e.g. powerline or nerd fonts.) I like the ability
-to get the same Command Line eXperience on every Linux (and Mac) machine without extra setup
-(besides these files.) Also, it's nice to be able to copy and paste from command line to anywhere.
+Bash forever.
 
 Notes:
-
-* On OSX, default bash is version 3.  See <https://apple.stackexchange.com/a/197172> for an
-  explanation of the lameness. Use brew to update if you want. I use v.5
+* On OSX, default bash is version 3.  See <https://apple.stackexchange.com/a/197172> for
+  an explanation of the lameness. Use brew to update to version 5
 * Best terminal program on Mac? Terminal.app. It's sooo fast.
-* Light background. I used a dark background for 20 years and it makes you feel c0013r. But
-  I noticed something with a light background (solarized-light or PaperColor): I could use
-  a smaller font comfortably (SF Mono 10pt on MBP 15). This applies to my editor, vim, as well.
+* Light background. I used a dark background for 20 years and it makes you feel c0013r.
+  But the thing with a light background (solarized-light or PaperColor) is that smaller
+  fonts become accessible and are more comfortable (SF Mono 10pt on MBP 15).
 
 Optional bash command line goodness:
 
@@ -29,11 +24,9 @@ Install:
 
 ```
 ~$ mkdir -p ~/bin
-~$ cd ~/bin && git clone https://github.com/brandon133/dotfiles.git
+~$ cd ~/bin && git clone https://github.com/brandon733/dotfiles.git
 ~$ cd ~/bin/dotfiles
 ~/bin/dotfiles$ ./update [--vim]
 ```
 
-Set `.bash_profile` to call 
-
-Also, see `install-mac.txt`.
+Set `.bash_profile` to call.
