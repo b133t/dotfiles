@@ -45,16 +45,15 @@ mkdir -p bash/completions $HOME/.bash/completions
 # kubectx, kubens
 [ -d "kubectx" ] && cd kubectx && git pull && cd ..
 [ ! -d "kubectx" ] && git clone https://github.com/ahmetb/kubectx.git
-[ ! -L "bin/kubectx"  ] && ln -s ../kubectx/kubectx ./bin/kubectx
-[ ! -L "bin/kubens"  ] && ln -s ../kubectx/kubens ./bin/kubens
-[ -L "bash/completions/kubectx.bash" ] || \
-	ln -s ../../kubectx/completion/kubectx.bash ./bash/completions/kubectx.bash
-[ -L "bash/completions/kubens.bash" ] || \
-	ln -s ../../kubectx/completion/kubens.bash ./bash/completions/kubens.bash
+# just copy these directly
+cp ./kubectx/kubectx $HOME/bin/
+cp ./kubectx/kubens $HOME/bin/
+cp ./kubectx/completion/kubectx.bash $HOME/.bash/completions/
+cp ./kubectx/completion/kubens.bash $HOME/.bash/completions/
 # commands
-hash kubectl && kubectl completion bash >~/.bash/completions/kubectl.bash
-hash helm && helm completion bash >~/.bash/completions/helm.bash
-hash poetry && poetry completions bash >~/.bash/completions/poetry.bash
+hash kubectl && kubectl completion bash >$HOME/.bash/completions/kubectl.bash
+hash helm && helm completion bash >$HOME/.bash/completions/helm.bash
+hash poetry && poetry completions bash >$HOME/.bash/completions/poetry.bash
 
 ## bash
 diffit profile .profile

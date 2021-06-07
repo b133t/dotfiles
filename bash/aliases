@@ -67,8 +67,6 @@ make_completion_wrapper  "_python_argcomplete gcloud" _gcloud gcloud
 complete -o nospace -F _gcloud gc
 complete -C terraform terraform
 complete -C terraform tf
-
 complete -F _docker d
-complete -o default -F _poetry_6fc10033adc3a873_complete po
 
 ## --- local

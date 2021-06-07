@@ -352,6 +352,7 @@ color "rename from "		yellow	default
 color "rename to "		yellow	default
 color "similarity "		yellow	default
 color "dissimilarity "		yellow	default
+color "\ No newline at end of file"	blue	default
 color "diff-tree "		blue	default
 color "Author: "		cyan	default
 color "Commit: "		magenta	default
