@@ -61,8 +61,8 @@ function $function_name {
 }
 
 __git_complete g __git_main
-
 complete -o default -F __start_kubectl kc
+complete -C /usr/local/bin/aws_completer aws
 make_completion_wrapper  "_python_argcomplete gcloud" _gcloud gcloud
 complete -o nospace -F _gcloud gc
 complete -C terraform terraform

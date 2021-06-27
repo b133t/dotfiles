@@ -23,4 +23,4 @@ update() {
 }
 [ $# -gt 0 ] || { echo "usage: $0 DIR [DIR ..]"; exit 1; }
 update $@
-echo $log_file
+echo "> $log_file"
